@@ -1,0 +1,295 @@
+2018-08-01 16:08:02 d0c24phj7cutv9rrb4brpi1t4jitr016 Status : 200
+2018-08-01 16:08:02 d0c24phj7cutv9rrb4brpi1t4jitr016 Message : Array
+(
+    [status_code] => 200
+    [data] => Array
+        (
+            [0] => stdClass Object
+                (
+                    [id] => 17
+                    [email] => renko@adidata.co.id
+                    [password] => c10658775fda39ba5655614a31c539547339e5089e2d4c0f7f6e0c9ae223ea18
+                    [name] => Renko Rotalio
+                    [emp_id] => 17
+                    [type] => 0
+                    [status] => active
+                    [created_date] => 2016-10-28 09:44:51
+                    [modified_date] => 
+                )
+
+        )
+
+)
+
+2018-08-01 16:08:02 d0c24phj7cutv9rrb4brpi1t4jitr016 URL/ID : 
+2018-08-01 16:08:08 d0c24phj7cutv9rrb4brpi1t4jitr016 Status : Initiate API
+2018-08-01 16:08:08 d0c24phj7cutv9rrb4brpi1t4jitr016 Message : get_qatracker
+2018-08-01 16:08:08 d0c24phj7cutv9rrb4brpi1t4jitr016 URL/ID : http://qatracker.adi-internal.com/Api/qatrackerusers
+2018-08-01 16:08:09 d0c24phj7cutv9rrb4brpi1t4jitr016 Status : 200
+2018-08-01 16:08:09 d0c24phj7cutv9rrb4brpi1t4jitr016 Message : Array
+(
+    [status_code] => 200
+    [data] => Array
+        (
+            [0] => stdClass Object
+                (
+                    [id] => 17
+                    [email] => renko@adidata.co.id
+                    [password] => c10658775fda39ba5655614a31c539547339e5089e2d4c0f7f6e0c9ae223ea18
+                    [name] => Renko Rotalio
+                    [emp_id] => 17
+                    [type] => 0
+                    [status] => active
+                    [created_date] => 2016-10-28 09:44:51
+                    [modified_date] => 
+                )
+
+        )
+
+)
+
+2018-08-01 16:08:09 d0c24phj7cutv9rrb4brpi1t4jitr016 URL/ID : 
+2018-08-01 16:08:26 d0c24phj7cutv9rrb4brpi1t4jitr016 Status : Initiate API
+2018-08-01 16:08:26 d0c24phj7cutv9rrb4brpi1t4jitr016 Message : get_qatracker
+2018-08-01 16:08:26 d0c24phj7cutv9rrb4brpi1t4jitr016 URL/ID : http://qatracker.adi-internal.com/Api/qatrackerusers
+2018-08-01 16:08:29 d0c24phj7cutv9rrb4brpi1t4jitr016 Status : Initiate API
+2018-08-01 16:08:29 d0c24phj7cutv9rrb4brpi1t4jitr016 Message : get_qatracker
+2018-08-01 16:08:29 d0c24phj7cutv9rrb4brpi1t4jitr016 URL/ID : http://qatracker.adi-internal.com/Api/qatrackerusers
+2018-08-01 16:08:29 d0c24phj7cutv9rrb4brpi1t4jitr016 Status : 200
+2018-08-01 16:08:29 d0c24phj7cutv9rrb4brpi1t4jitr016 Message : Array
+(
+    [status_code] => 200
+    [data] => Array
+        (
+            [0] => stdClass Object
+                (
+                    [id] => 17
+                    [email] => renko@adidata.co.id
+                    [password] => c10658775fda39ba5655614a31c539547339e5089e2d4c0f7f6e0c9ae223ea18
+                    [name] => Renko Rotalio
+                    [emp_id] => 17
+                    [type] => 0
+                    [status] => active
+                    [created_date] => 2016-10-28 09:44:51
+                    [modified_date] => 
+                )
+
+        )
+
+)
+
+2018-08-01 16:08:29 d0c24phj7cutv9rrb4brpi1t4jitr016 URL/ID : 
+2018-08-01 16:08:47 d0c24phj7cutv9rrb4brpi1t4jitr016 Status : Initiate API
+2018-08-01 16:08:47 d0c24phj7cutv9rrb4brpi1t4jitr016 Message : get_qatracker
+2018-08-01 16:08:47 d0c24phj7cutv9rrb4brpi1t4jitr016 URL/ID : http://qatracker.adi-internal.com/Api/qatrackerusers
+2018-08-01 16:08:49 d0c24phj7cutv9rrb4brpi1t4jitr016 Status : Initiate API
+2018-08-01 16:08:49 d0c24phj7cutv9rrb4brpi1t4jitr016 Message : get_qatracker
+2018-08-01 16:08:49 d0c24phj7cutv9rrb4brpi1t4jitr016 URL/ID : http://qatracker.adi-internal.com/Api/qatrackerusers
+2018-08-01 16:08:49 d0c24phj7cutv9rrb4brpi1t4jitr016 Status : 200
+2018-08-01 16:08:49 d0c24phj7cutv9rrb4brpi1t4jitr016 Message : Array
+(
+    [status_code] => 200
+    [data] => Array
+        (
+            [0] => stdClass Object
+                (
+                    [id] => 17
+                    [email] => renko@adidata.co.id
+                    [password] => c10658775fda39ba5655614a31c539547339e5089e2d4c0f7f6e0c9ae223ea18
+                    [name] => Renko Rotalio
+                    [emp_id] => 17
+                    [type] => 0
+                    [status] => active
+                    [created_date] => 2016-10-28 09:44:51
+                    [modified_date] => 
+                )
+
+        )
+
+)
+
+2018-08-01 16:08:49 d0c24phj7cutv9rrb4brpi1t4jitr016 URL/ID : 
+2018-08-01 16:08:11 d0c24phj7cutv9rrb4brpi1t4jitr016 Status : Initiate API
+2018-08-01 16:08:11 d0c24phj7cutv9rrb4brpi1t4jitr016 Message : get_qatracker
+2018-08-01 16:08:11 d0c24phj7cutv9rrb4brpi1t4jitr016 URL/ID : http://qatracker.adi-internal.com/Api/qatrackerusers
+2018-08-01 16:08:13 d0c24phj7cutv9rrb4brpi1t4jitr016 Status : Initiate API
+2018-08-01 16:08:13 d0c24phj7cutv9rrb4brpi1t4jitr016 Message : get_qatracker
+2018-08-01 16:08:13 d0c24phj7cutv9rrb4brpi1t4jitr016 URL/ID : http://qatracker.adi-internal.com/Api/qatrackerusers
+2018-08-01 16:08:14 d0c24phj7cutv9rrb4brpi1t4jitr016 Status : 200
+2018-08-01 16:08:14 d0c24phj7cutv9rrb4brpi1t4jitr016 Message : Array
+(
+    [status_code] => 200
+    [data] => Array
+        (
+            [0] => stdClass Object
+                (
+                    [id] => 17
+                    [email] => renko@adidata.co.id
+                    [password] => c10658775fda39ba5655614a31c539547339e5089e2d4c0f7f6e0c9ae223ea18
+                    [name] => Renko Rotalio
+                    [emp_id] => 17
+                    [type] => 0
+                    [status] => active
+                    [created_date] => 2016-10-28 09:44:51
+                    [modified_date] => 
+                )
+
+        )
+
+)
+
+2018-08-01 16:08:14 d0c24phj7cutv9rrb4brpi1t4jitr016 URL/ID : 
+2018-08-01 16:08:35 qigfhbs672ho0stc6g6ji7akh4sl703u Status : Initiate API
+2018-08-01 16:08:35 qigfhbs672ho0stc6g6ji7akh4sl703u Message : get_qatracker
+2018-08-01 16:08:35 qigfhbs672ho0stc6g6ji7akh4sl703u URL/ID : http://qatracker.adi-internal.com/Api/qatrackerusers
+2018-08-01 16:08:38 qigfhbs672ho0stc6g6ji7akh4sl703u Status : Initiate API
+2018-08-01 16:08:38 qigfhbs672ho0stc6g6ji7akh4sl703u Message : get_qatracker
+2018-08-01 16:08:38 qigfhbs672ho0stc6g6ji7akh4sl703u URL/ID : http://qatracker.adi-internal.com/Api/qatrackerusers
+2018-08-01 16:08:39 qigfhbs672ho0stc6g6ji7akh4sl703u Status : 200
+2018-08-01 16:08:39 qigfhbs672ho0stc6g6ji7akh4sl703u Message : Array
+(
+    [status_code] => 200
+    [data] => Array
+        (
+            [0] => stdClass Object
+                (
+                    [id] => 17
+                    [email] => renko@adidata.co.id
+                    [password] => c10658775fda39ba5655614a31c539547339e5089e2d4c0f7f6e0c9ae223ea18
+                    [name] => Renko Rotalio
+                    [emp_id] => 17
+                    [type] => 0
+                    [status] => active
+                    [created_date] => 2016-10-28 09:44:51
+                    [modified_date] => 
+                )
+
+        )
+
+)
+
+2018-08-01 16:08:39 qigfhbs672ho0stc6g6ji7akh4sl703u URL/ID : 
+2018-08-01 16:08:40 qigfhbs672ho0stc6g6ji7akh4sl703u Status : Initiate API
+2018-08-01 16:08:40 qigfhbs672ho0stc6g6ji7akh4sl703u Message : get_qatracker
+2018-08-01 16:08:40 qigfhbs672ho0stc6g6ji7akh4sl703u URL/ID : http://bi-qatracker.adi-internal.com/Api/qatrackerusers
+2018-08-01 16:08:40 qigfhbs672ho0stc6g6ji7akh4sl703u Status : 404
+2018-08-01 16:08:40 qigfhbs672ho0stc6g6ji7akh4sl703u Message : Array
+(
+    [status_code] => 404
+    [msg] => {"status":false,"message":"No users were found"}
+)
+
+2018-08-01 16:08:40 qigfhbs672ho0stc6g6ji7akh4sl703u URL/ID : 
+2018-08-01 16:08:40 qigfhbs672ho0stc6g6ji7akh4sl703u Status : 404
+2018-08-01 16:08:40 qigfhbs672ho0stc6g6ji7akh4sl703u Message : ENTER INSERT AREA FOR : emp_id= 17 NAME= renko@adidata.co.id
+2018-08-01 16:08:40 qigfhbs672ho0stc6g6ji7akh4sl703u URL/ID : 
+2018-08-01 16:08:41 qigfhbs672ho0stc6g6ji7akh4sl703u Status : 200
+2018-08-01 16:08:41 qigfhbs672ho0stc6g6ji7akh4sl703u Message : Array
+(
+    [status_code] => 200
+    [data] => stdClass Object
+        (
+            [status_msg] => User added
+        )
+
+)
+
+2018-08-01 16:08:41 qigfhbs672ho0stc6g6ji7akh4sl703u URL/ID : 
+2018-08-14 16:08:34 ptod9bih9sn60nrdb98l59h9cbvj27b4 Status : Initiate API
+2018-08-14 16:08:34 ptod9bih9sn60nrdb98l59h9cbvj27b4 Message : get_qatracker
+2018-08-14 16:08:34 ptod9bih9sn60nrdb98l59h9cbvj27b4 URL/ID : http://qatracker.adi-internal.com/Api/qatrackerusers
+2018-10-02 18:14:10 dutml2r4aq9ln2puu1u43v1ffpi7j521 Status : Initiate API
+2018-10-02 18:14:10 dutml2r4aq9ln2puu1u43v1ffpi7j521 Message : get_daily_report
+2018-10-02 18:14:10 dutml2r4aq9ln2puu1u43v1ffpi7j521 URL/ID : http://bi-qatracker.adi-internal.com/Api/dailyreport
+2018-10-02 18:14:11 dutml2r4aq9ln2puu1u43v1ffpi7j521 Status : Finsih API Model - get_daily_report
+2018-10-02 18:14:11 dutml2r4aq9ln2puu1u43v1ffpi7j521 Message : 201
+2018-10-02 18:14:11 dutml2r4aq9ln2puu1u43v1ffpi7j521 URL/ID : ok
+2018-11-29 17:15:55 ktks4s9ripslijq4nvfrj84f9o0bf3ko Status : Initiate API
+2018-11-29 17:15:55 ktks4s9ripslijq4nvfrj84f9o0bf3ko Message : get_qatracker
+2018-11-29 17:15:55 ktks4s9ripslijq4nvfrj84f9o0bf3ko URL/ID : http://bi-qatracker.adi-internal.com/Api/qatrackerusers
+2018-11-29 17:15:57 ktks4s9ripslijq4nvfrj84f9o0bf3ko Status : Finsih API Model - get_qatracker
+2018-11-29 17:15:57 ktks4s9ripslijq4nvfrj84f9o0bf3ko Message : 200
+2018-11-29 17:15:57 ktks4s9ripslijq4nvfrj84f9o0bf3ko URL/ID : ok
+2018-11-29 17:16:01 ktks4s9ripslijq4nvfrj84f9o0bf3ko Status : Initiate API
+2018-11-29 17:16:01 ktks4s9ripslijq4nvfrj84f9o0bf3ko Message : get_qatracker
+2018-11-29 17:16:01 ktks4s9ripslijq4nvfrj84f9o0bf3ko URL/ID : http://bi-qatracker.adi-internal.com/Api/qatrackerusers
+2018-11-29 17:16:01 ktks4s9ripslijq4nvfrj84f9o0bf3ko Status : Finsih API Model - get_qatracker
+2018-11-29 17:16:01 ktks4s9ripslijq4nvfrj84f9o0bf3ko Message : 200
+2018-11-29 17:16:01 ktks4s9ripslijq4nvfrj84f9o0bf3ko URL/ID : ok
+2018-11-29 17:16:01 ktks4s9ripslijq4nvfrj84f9o0bf3ko Status : 200
+2018-11-29 17:16:01 ktks4s9ripslijq4nvfrj84f9o0bf3ko Message : Array
+(
+    [status_code] => 200
+    [data] => Array
+        (
+            [0] => stdClass Object
+                (
+                    [id] => 65
+                    [email] => donny@adidata.co.id
+                    [password] => 0f8ad0a7d148ba522e1ba4bfe7a4c709294c9bd889df3544e4d8183ccc33d6eb
+                    [name] => Donny Andrianto
+                    [emp_id] => 2
+                    [type] => 0
+                    [status] => active
+                    [created_date] => 2018-09-20 20:08:46
+                    [modified_date] => 
+                )
+
+        )
+
+)
+
+2018-11-29 17:16:01 ktks4s9ripslijq4nvfrj84f9o0bf3ko URL/ID : 
+2018-11-29 17:16:01 ktks4s9ripslijq4nvfrj84f9o0bf3ko Status : Initiate API
+2018-11-29 17:16:01 ktks4s9ripslijq4nvfrj84f9o0bf3ko Message : update_qatracker
+2018-11-29 17:16:01 ktks4s9ripslijq4nvfrj84f9o0bf3ko URL/ID : http://bi-qatracker.adi-internal.com/Api/updateusers
+2018-11-29 17:16:02 ktks4s9ripslijq4nvfrj84f9o0bf3ko Status : Finsih API Model - update_qatracker
+2018-11-29 17:16:02 ktks4s9ripslijq4nvfrj84f9o0bf3ko Message : 200
+2018-11-29 17:16:02 ktks4s9ripslijq4nvfrj84f9o0bf3ko URL/ID : ok
+2018-11-29 17:16:02 ktks4s9ripslijq4nvfrj84f9o0bf3ko Status : 912
+2018-11-29 17:16:02 ktks4s9ripslijq4nvfrj84f9o0bf3ko Message : Array
+(
+    [status_code] => 912
+    [msg] => No Client
+)
+
+2018-11-29 17:16:02 ktks4s9ripslijq4nvfrj84f9o0bf3ko URL/ID : 
+2018-11-29 17:16:02 ktks4s9ripslijq4nvfrj84f9o0bf3ko Status : 912
+2018-11-29 17:16:02 ktks4s9ripslijq4nvfrj84f9o0bf3ko Message : ENTER INSERT AREA FOR : emp_id= 2 NAME= donny@adidata.co.id
+2018-11-29 17:16:02 ktks4s9ripslijq4nvfrj84f9o0bf3ko URL/ID : 
+2018-11-29 17:16:02 ktks4s9ripslijq4nvfrj84f9o0bf3ko Status : Initiate API
+2018-11-29 17:16:02 ktks4s9ripslijq4nvfrj84f9o0bf3ko Message : get_qatracker
+2018-11-29 17:16:02 ktks4s9ripslijq4nvfrj84f9o0bf3ko URL/ID : http://bi-qatracker.adi-internal.com/Api/qatrackerusers
+2018-11-29 17:16:02 ktks4s9ripslijq4nvfrj84f9o0bf3ko Status : Finsih API Model - get_qatracker
+2018-11-29 17:16:02 ktks4s9ripslijq4nvfrj84f9o0bf3ko Message : 200
+2018-11-29 17:16:02 ktks4s9ripslijq4nvfrj84f9o0bf3ko URL/ID : ok
+2018-11-29 17:17:47 ktks4s9ripslijq4nvfrj84f9o0bf3ko Status : Initiate API
+2018-11-29 17:17:47 ktks4s9ripslijq4nvfrj84f9o0bf3ko Message : get_qatracker
+2018-11-29 17:17:47 ktks4s9ripslijq4nvfrj84f9o0bf3ko URL/ID : http://bi-qatracker.adi-internal.com/Api/qatrackerusers
+2018-11-29 17:17:47 ktks4s9ripslijq4nvfrj84f9o0bf3ko Status : Finsih API Model - get_qatracker
+2018-11-29 17:17:47 ktks4s9ripslijq4nvfrj84f9o0bf3ko Message : 200
+2018-11-29 17:17:47 ktks4s9ripslijq4nvfrj84f9o0bf3ko URL/ID : ok
+2018-11-29 17:19:36 d1i5ln9oo7s0cumti0hh2l2nbl9pvm0u Status : Initiate API
+2018-11-29 17:19:36 d1i5ln9oo7s0cumti0hh2l2nbl9pvm0u Message : get_qatracker
+2018-11-29 17:19:36 d1i5ln9oo7s0cumti0hh2l2nbl9pvm0u URL/ID : http://qatracker.adi-internal.com/Api/qatrackerusers
+2018-11-29 17:19:36 d1i5ln9oo7s0cumti0hh2l2nbl9pvm0u Status : Finsih API Model - get_qatracker
+2018-11-29 17:19:36 d1i5ln9oo7s0cumti0hh2l2nbl9pvm0u Message : 200
+2018-11-29 17:19:36 d1i5ln9oo7s0cumti0hh2l2nbl9pvm0u URL/ID : ok
+2018-11-29 17:33:07 8rm8bjoaiu1id0dvgpv5774m31t96sks Status : Initiate API
+2018-11-29 17:33:07 8rm8bjoaiu1id0dvgpv5774m31t96sks Message : get_qatracker
+2018-11-29 17:33:07 8rm8bjoaiu1id0dvgpv5774m31t96sks URL/ID : http://qatracker.adi-internal.com/Api/qatrackerusers
+2018-11-29 17:33:08 8rm8bjoaiu1id0dvgpv5774m31t96sks Status : Finsih API Model - get_qatracker
+2018-11-29 17:33:08 8rm8bjoaiu1id0dvgpv5774m31t96sks Message : 200
+2018-11-29 17:33:08 8rm8bjoaiu1id0dvgpv5774m31t96sks URL/ID : ok
+2018-11-29 17:33:38 8rm8bjoaiu1id0dvgpv5774m31t96sks Status : Initiate API
+2018-11-29 17:33:38 8rm8bjoaiu1id0dvgpv5774m31t96sks Message : get_qatracker
+2018-11-29 17:33:38 8rm8bjoaiu1id0dvgpv5774m31t96sks URL/ID : http://qatracker.adi-internal.com/Api/qatrackerusers
+2018-11-29 17:33:38 8rm8bjoaiu1id0dvgpv5774m31t96sks Status : Finsih API Model - get_qatracker
+2018-11-29 17:33:38 8rm8bjoaiu1id0dvgpv5774m31t96sks Message : 200
+2018-11-29 17:33:38 8rm8bjoaiu1id0dvgpv5774m31t96sks URL/ID : ok
+2018-11-29 18:11:35 gcptumcmnke636jl60k4jhs18kd0hiiv Status : Initiate API
+2018-11-29 18:11:35 gcptumcmnke636jl60k4jhs18kd0hiiv Message : get_qatracker
+2018-11-29 18:11:35 gcptumcmnke636jl60k4jhs18kd0hiiv URL/ID : http://qatracker.adi-internal.com/Api/qatrackerusers
+2018-11-29 18:11:36 gcptumcmnke636jl60k4jhs18kd0hiiv Status : Finsih API Model - get_qatracker
+2018-11-29 18:11:36 gcptumcmnke636jl60k4jhs18kd0hiiv Message : 200
+2018-11-29 18:11:36 gcptumcmnke636jl60k4jhs18kd0hiiv URL/ID : ok
