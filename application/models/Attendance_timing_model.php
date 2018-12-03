@@ -23,9 +23,10 @@ class Attendance_timing_model extends CI_Model {
 	
 	public function get_show_timing($where = array())
     {    
-        $this->db->select('attendance_timing.*, client.name as client_name');
+        $this->db->select('attendance_timing.*, client.name as client_name, projects.name as project_name');
         $this->db->from('attendance_timing');
 		$this->db->join('client','client.id = attendance_timing.client_id');
+		$this->db->join('projects','projects.id = attendance_timing.project_id');
 		$this->db->where($where);
         $query = $this->db->get();
         return $query->result_array();
@@ -43,8 +44,8 @@ class Attendance_timing_model extends CI_Model {
 	public function insert_attendance_timing($data = array())
 	{
 		$insetData = array(
-				array('client_id' => $data['client'],'name' => 'comes', 'showed_name'=>'Come In', 'time' => $data['time_in'], 'user_c' => $data['user_c']),
-				array('client_id' => $data['client'],'name' => 'go_home', 'showed_name'=>'Go Home', 'time' => $data['time_out'], 'user_c' => $data['user_c'])
+				array('project_id' => $data['project_id'],'client_id' => $data['client'],'name' => 'comes', 'showed_name'=>'Come In', 'time' => $data['time_in'], 'user_c' => $data['user_c']),
+				array('project_id' => $data['project_id'],'client_id' => $data['client'],'name' => 'go_home', 'showed_name'=>'Go Home', 'time' => $data['time_out'], 'user_c' => $data['user_c'])
 		);
 		return $this->db->insert_batch('attendance_timing',$insetData);
 	}

@@ -16,12 +16,15 @@
 						);
 			$this->page_css  = array(
 							'vendor/datatables-plugins/dataTables.bootstrap.css',
-							'vendor/datatables-responsive/dataTables.responsive.css'
+							'vendor/datatables-responsive/dataTables.responsive.css',
+							'vendor/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css'
 						);
 			$this->page_js  = array(
 							'vendor/datatables/js/jquery.dataTables.min.js',
 							'vendor/datatables-plugins/dataTables.bootstrap.min.js',
 							'vendor/datatables-responsive/dataTables.responsive.js',
+							'vendor/moment/moment.min.js',
+							'vendor/bootstrap-datetimepicker/bootstrap-datetimepicker.js',
 							'page/js/projects.js'
 						);
 			$this->contents = 'contents/projects/index';   // its your view name, change for as per requirement.
@@ -123,9 +126,14 @@
 				
 				$this->form_validation->set_rules('client_id', 'Client', 'required');
 				$this->form_validation->set_rules('name', 'Name', 'required');
+				$this->form_validation->set_rules('meal_allowance', 'Meal Allowance', 'required|numeric');
+				$this->form_validation->set_rules('transport', 'Transport', 'required|numeric');
+				$this->form_validation->set_rules('internet_laptop', 'Internet + Laptop', 'required|numeric');
+				$this->form_validation->set_rules('overtime[]', 'Overtime', 'required');
+				$this->form_validation->set_rules('we_overtime_[]', 'Weekend Overtime', 'required');
 				
 				$data = $this->input->post();
-				
+
 				try{
 					if($this->form_validation->run()){	
 						if(!$this->projects_model->insert_div($data)){

@@ -26,7 +26,7 @@
 						);
 			$this->contents = 'contents/allowance/index';   // its your view name, change for as per requirement.
 			$this->data['contents'] = array(
-									'table_active' => $this->allowance_model->get_show_allowance(array('allowance.status' => 'active','client.status' => 1)),
+									'table_active' => $this->allowance_model->get_show_allowance(array('allowance.status' => 'active','client.status' => 1),'project_id'),
 									'data' => array()
 								);
 		}
@@ -34,6 +34,15 @@
         		
 		public function index() {
 			$this->front_stuff();
+            $this->layout();
+        }
+		
+		public function lists($project_id = 0) {
+			$this->front_stuff();
+			$this->contents = 'contents/allowance/list';   // its your view name, change for as per requirement.
+			$this->data['contents'] = array(
+									'table_active' => $this->allowance_model->get_show_allowance(array('project_id' => $project_id,'allowance.status' => 'active','client.status' => 1)),
+								);
             $this->layout();
         }
 		

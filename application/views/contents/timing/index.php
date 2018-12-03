@@ -52,6 +52,7 @@
 											<thead>
 												<tr>
 													<th>Client</th>
+													<th>Project</th>
 													<th>Name</th>
 													<th>Time</th>
 													<th>Action</th>
@@ -61,6 +62,7 @@
 												<?php foreach($contents['table_active'] as $key => $value) :?>
 												<tr>
 													<td><?php echo $value['client_name']; ?></td>
+													<td><?php echo $value['project_name']; ?></td>
 													<td><?php echo $value['showed_name']; ?></td>
 													<td><?php echo $value['time']; ?></td>
 													<td>

@@ -52,7 +52,8 @@
 											<thead>
 												<tr>
 													<th>Client</th>
-													<th>Client</th>
+													<th>Name</th>
+													<th>Nominal</th>
 													<th>Action</th>
 												</tr>
 											</thead>
@@ -60,9 +61,10 @@
 												<?php foreach($contents['table_active'] as $key => $value) :?>
 												<tr>
 													<td><?php echo $value['client_name']; ?></td>
-													<td><?php echo $value['project_name']; ?></td>
+													<td><?php echo $value['showed_name']; ?></td>
+													<td><?php echo number_format($value['nominal']); ?></td>
 													<td>
-														<a class="btn btn-secondary btn-xs" href='<?php echo base_url().'allowance/lists/'.$value['project_id'];?>'><i class="fa fa-eye"></i> Lists</a>
+														<a class="btn btn-secondary btn-xs" href='<?php echo base_url().'allowance/edit/'.$value['id'];?>'><i class="fa fa-edit"></i> Edit</a>
 													</td>
 												</tr>
 												<?php endforeach;?>

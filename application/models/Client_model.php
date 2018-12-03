@@ -29,34 +29,8 @@ class Client_model extends CI_Model {
       }
     public function insert_div($data = array())
       {
-		$this->load->model('allowance_model', 'am');
-		$this->load->model('attendance_timing_model', 'atm');
-		$this->load->model('config_model', 'cm');
 		$data['user_c'] = $this->session->userdata('logged_in_data')['id'];
-		$this->db->trans_begin();
-          if($this->db->insert('client',array('name' => $data['name'], 'user_c'=> $data['user_c'])) ){
-			  $data['client'] = $this->db->insert_id();
-			  if($this->am->insert_allowance($data)){
-				  if($this->atm->insert_attendance_timing($data)){
-					  if($this->cm->insert_config_qatracker($data)){
-						$this->db->trans_commit();
-						return TRUE;					  						  
-					  }else{
-						$this->db->trans_rollback();
-						return FALSE;
-					  }
-				  }else{
-					$this->db->trans_rollback();
-					return FALSE;
-				  }
-			  }else{
-				  $this->db->trans_rollback();
-				  return FALSE;
-			  }
-		  }else{
-			  $this->db->trans_rollback();
-			  return FALSE;
-		  }
+		return $this->db->insert('client',array('name' => $data['name'], 'user_c'=> $data['user_c']));
       }
 
   	public function update_div($id = 0, $data = array())
