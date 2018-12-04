@@ -30,3 +30,6 @@ application/config/config.php
 xlsuploads/*
 genreports/*
 /index.php
+api.log
+composer.lock
+application/composer.lock
