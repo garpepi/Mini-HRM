@@ -33,3 +33,4 @@ genreports/*
 api.log
 composer.lock
 application/composer.lock
+logs/*
