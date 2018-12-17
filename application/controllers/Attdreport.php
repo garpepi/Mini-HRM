@@ -12,6 +12,8 @@
 			$this->load->model('leaves_qac_model');
 			$this->load->model('holiday_model');
 			$this->load->model('client_model');
+			$this->load->model('projects_model');
+			$this->load->model('overtime_model');
 		}
 
 		private function front_stuff(){
@@ -58,6 +60,7 @@
 									'employee' => $this->employee_model->get_emp(array('employee.status' => 'active')),
 									'attendant_posted' => array(),
 									'clients' => $this->client_model->get_client(array('status' => 1)),
+									'projects' => $this->projects_model->get_projects(array('projects.status' => 1)),
 									'period' => ''
 								);
 				$this->layout();
@@ -70,10 +73,13 @@
 					//$this->form_validation->set_rules('employee', 'Employee', 'required');
 					$this->form_validation->set_rules('month', 'Month', 'required|numeric');
 					$this->form_validation->set_rules('year', 'Year', 'required|numeric');
-					$this->form_validation->set_rules('client', 'Client', 'required|numeric');
+					$this->form_validation->set_rules('project', 'Client - Project', 'required|numeric');
 					if($this->form_validation->run()){
 						$period = $this->input->post('year').'-'.$this->input->post('month');
-						$client_id = $this->input->post('client');
+						$project_id = $this->input->post('project');
+						$client_id = $this->projects_model->get_projects(array("projects.id" => $project_id, "projects.status" => "Active"))[0]["client_id"];
+					
+						
 						$all = 0;
 						$selected_employee = '';
 						foreach($this->input->post('employee') as $key => $value){
@@ -88,9 +94,9 @@
 							}
 						}
 						if($all){
-							$attendant_posted = $this->attendance_model->get_attd_period_detail(array('attendance_report.period' => $period, 'employee.client_id' => $client_id));
+							$attendant_posted = $this->attendance_model->get_attd_period_detail(array('attendance_report.period' => $period, 'employee.client_id' => $client_id, 'employee.project_id' => $project_id));
 						}else{
-							$attendant_posted = $this->attendance_model->get_attd_period_detail(array('attendance_report.period' => $period, 'employee.client_id' => $client_id),$selected_employee);
+							$attendant_posted = $this->attendance_model->get_attd_period_detail(array('attendance_report.period' => $period, 'employee.client_id' => $client_id, 'employee.project_id' => $project_id),$selected_employee);
 						}
 
 						if(empty($attendant_posted)){
@@ -153,7 +159,6 @@
 						number_format($value['daily_report_total']),
 						number_format($value['late_total']),
 						number_format($value['overtime_total']),
-						number_format($value['overtime_go_home']),
 						number_format($value['laptop_internet_total']),
 						number_format($value['transport_total']),
 						number_format($value['meal_allowance_total']),
@@ -197,7 +202,6 @@
 						'Daily Report Total',
 						'Late Total',
 						'Overtime Total',
-						'Overtime late night',
 						'Laptop + Internet Total',
 						'Transport Total',
 						'Meal Allowance Total',
@@ -261,22 +265,65 @@
 			$objWriter->save('php://output');
 		}
 
-		public function dopost($period,$client_id) {
+		public function dopost($period,$client_id,$project_id) {
 			if ($this->input->server('REQUEST_METHOD') == 'POST'){
 				try{
 					
 					$period_report = array();
 					$date_post = date('Y-m-d H:i:s');
-					$allowance = $this->allowance_model->get_allowance(array('allowance.client_id' => $client_id));
-					$attendance_period = $this->attendance_model->get_attd_period(array('attendance_period.period' => $period, 'attendance_period.status' => 'not post', 'attendance_period.client_id' => $client_id));
+					$allowance = $this->allowance_model->get_allowance(array('allowance.client_id' => $client_id,'allowance.project_id' => $project_id));
+					$attendance_period = $this->attendance_model->get_attd_period(array('attendance_period.period' => $period, 'attendance_period.status' => 'not post', 'attendance_period.client_id' => $client_id, 'attendance_period.project_id' => $project_id));
 
 					foreach($attendance_period as $key => $value){
 						$internet_laptop = $allowance['internet_laptop']['nominal'] * $value['attend_total'];
 						$transport = $allowance['transport']['nominal'] * ($value['attend_total'] - $value['late_total']);
 						$meal_allowance = $allowance['meal_allowance']['nominal'] * $value['daily_report_total'];
+						
+						// OLD OVERTIME CALCULATIOM
+						/*
+						// overtime normal
 						$overtime_meal = $allowance['overtime_meal_allowance']['nominal'] * $value['overtime_total'];
+						// overtime weekend / holiday
 						$overtime_go_home = $allowance['overtime_go_home_allowance']['nominal'] * $value['overtime_go_home'];
-						$total = $internet_laptop + $transport + $meal_allowance + $overtime_meal + $overtime_go_home + $value['medical_total'];
+						*/
+						//$total = $internet_laptop + $transport + $meal_allowance + $overtime_meal + $overtime_go_home + $value['medical_total'];
+						
+						// NEW OVERTIME CALCULATION 12/17/2018
+						$overtimes = $this->overtime_model->get_overtime(array('emp_id' => $value['emp_id'],'date >=' => $period.'-01', 'date <=' => date('Y-m-t', strtotime($period.'-01')) ,'overtime.status' => 'active'));
+						$overtime_holiday = 0;
+						$overtime_regular = 0;
+						
+						$timing = $this->attendance_timing_model->get_timing(array('attendance_timing.client_id'=> $client_id, 'attendance_timing.project_id'=> $project_id));
+						$holiday = array();
+						$holiday_raw = $this->holiday_model->get_holiday(array('date >=' => $period.'-01','date <= ' => date('Y-m-t' , strtotime($period.'-01')), 'status' => 'active'));
+						if(!empty($holiday_raw)){
+							foreach($holiday_raw as $keyHoli => $valueHoli){
+								$holiday[] = $valueHoli['date'];
+							}
+						}
+						foreach($overtimes as $keyOver => $valueOver)
+						{
+							// time different
+							$difference = floor(abs(strtotime($valueOver['time_go_home']) - strtotime($timing['go_home']['time']))/3600);
+							if($difference > 15)
+							{
+								$difference = 15;
+							}
+							// divers holidays and not
+							if(date('D', strtotime($valueOver['date'])) == 'Sat' || date('D', strtotime($valueOver['date'])) == 'Sun' || in_array($valueOver['date'], $holiday))
+							{
+								// holiday
+								$overtime_holiday += $allowance['we_overtime_'.$difference.'h'];
+							}
+							else
+							{
+								// regular
+								$overtime_regular += $allowance['overtime_'.$difference.'h'];
+							}
+						}
+						
+						$total = $internet_laptop + $transport + $meal_allowance + $overtime_holiday + $overtime_regular + $value['medical_total'];
+
 						// count leaves_remaining
 						$leaves_remaining = 0;
 						if($value['employee_data']['employee_status'] != 1){
@@ -300,7 +347,7 @@
 											'laptop_internet_total' => $internet_laptop,
 											'transport_total' => $transport,
 											'meal_allowance_total' => $meal_allowance,
-											'overtime_meal_allowance_total' => $overtime_meal + $overtime_go_home,
+											'overtime_meal_allowance_total' => $overtime_holiday + $overtime_regular,
 											'total' => $total,
 											'bank_account_number' => $value['employee_data']['bank_account'],
 											'bank_name' => $value['employee_data']['bank_name'],
@@ -346,6 +393,7 @@
 				$this->data['contents'] = array(
 									'attendant_period' => array(),
 									'clients' => $this->client_model->get_client(array('status' => 1)),
+									'projects' => $this->projects_model->get_projects(array('projects.status' => 1)),
 									'allowance' => array()
 								);
 				$this->layout();
@@ -357,8 +405,9 @@
 					}
 
 					$period = $this->input->post('year').'-'.$this->input->post('month');
-					$client_id = $this->input->post('client');
-					$attendance_period = $this->attendance_model->get_attd_period(array('attendance_period.period' => $period, 'attendance_period.status' => 'not post', 'attendance_period.client_id' => $client_id));
+					$project_id = $this->input->post('project_id');
+					$client_id = $this->projects_model->get_projects(array("projects.id" => $project_id, "projects.status" => "Active"))[0]["client_id"];
+					$attendance_period = $this->attendance_model->get_attd_period(array('attendance_period.period' => $period, 'attendance_period.status' => 'not post', 'attendance_period.client_id' => $client_id, 'attendance_period.project_id' => $project_id));
 					//$this->stop_fancy_print($this->db->last_query());
 					if(empty($attendance_period)){
 						throw new Exception('No data Available to post');
@@ -389,6 +438,7 @@
 					$this->data['contents'] = array(
 										'period' => $period,
 										'client_id' => $client_id,
+										'project_id' => $project_id,
 										'client_name' => $this->client_model->get_client_name($client_id),
 										'attendant_period' => $attendance_period,
 										'allowance' => $this->allowance_model->get_allowance(array('allowance.client_id' => $client_id))

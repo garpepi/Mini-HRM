@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 29, 2018 at 05:44 PM
+-- Generation Time: Dec 17, 2018 at 04:46 PM
 -- Server version: 10.1.31-MariaDB
 -- PHP Version: 7.2.3
 
@@ -11,6 +11,12 @@ SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
 
 --
 -- Database: `minihrm`
@@ -25,6 +31,7 @@ SET time_zone = "+00:00";
 CREATE TABLE `allowance` (
   `id` int(11) NOT NULL,
   `client_id` int(11) NOT NULL,
+  `project_id` int(11) NOT NULL,
   `name` varchar(255) COLLATE utf32_unicode_ci NOT NULL,
   `showed_name` varchar(255) COLLATE utf32_unicode_ci NOT NULL,
   `nominal` bigint(20) NOT NULL,
@@ -67,6 +74,7 @@ CREATE TABLE `attendance_period` (
   `id` bigint(20) NOT NULL,
   `emp_id` bigint(20) NOT NULL,
   `client_id` int(11) NOT NULL,
+  `project_id` int(11) NOT NULL,
   `period` varchar(7) COLLATE utf32_unicode_ci NOT NULL,
   `leaves_total` int(11) NOT NULL,
   `attend_total` int(11) NOT NULL,
@@ -155,6 +163,7 @@ CREATE TABLE `attendance_report` (
 CREATE TABLE `attendance_timing` (
   `id` int(11) NOT NULL,
   `client_id` int(11) NOT NULL,
+  `project_id` int(11) NOT NULL,
   `name` varchar(255) COLLATE utf32_unicode_ci NOT NULL,
   `showed_name` varchar(255) COLLATE utf32_unicode_ci NOT NULL,
   `time` time NOT NULL,
@@ -864,20 +873,6 @@ ALTER TABLE `sick`
 ALTER TABLE `users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
-
-
-INSERT INTO `allowance` (`id`, `client_id`, `name`, `showed_name`, `nominal`, `status`, `user_c`, `user_m`, `created_date`, `modified_date`) VALUES
-(1, 1, 'meal_allowance', 'Meal Allowance', 25000, 'active', 1, 3, '2016-10-24 17:38:11', '2018-07-23 06:45:09'),
-(2, 1, 'transport', 'Transport', 25000, 'active', 1, 3, '2016-10-24 17:39:56', '2018-07-23 06:45:06'),
-(3, 1, 'internet_laptop', 'Internet & Laptop', 25000, 'active', 1, 3, '2016-10-24 17:39:56', '2018-07-23 06:45:03'),
-(4, 1, 'overtime_meal_allowance', 'Overtime', 50000, 'active', 1, 3, '2016-10-24 17:40:22', '2018-07-23 06:45:01'),
-(5, 1, 'overtime_go_home_allowance', 'Overtime > 12 AM', 25000, 'active', 1, NULL, '2017-07-13 01:04:11', '2018-07-23 06:44:59');
-
-INSERT INTO `attendance_timing` (`id`, `client_id`, `name`, `showed_name`, `time`, `status`, `user_c`, `user_m`, `created_date`, `modified_date`) VALUES
-(1, 1, 'comes', 'Come In', '08:01:00', 'active', 1, 1, '2016-11-28 01:00:02', '2018-07-23 07:46:02'),
-(2, 1, 'go_home', 'Go Home', '16:29:00', 'active', 1, 1, '2016-11-28 01:00:02', '2018-07-23 07:46:08'),
-(3, 7, 'comes', 'Come In', '09:01:00', 'active', 7, NULL, '2018-07-23 08:16:08', NULL),
-(4, 7, 'go_home', 'Go Home', '15:00:00', 'active', 7, NULL, '2018-07-23 08:16:08', NULL);
 
 INSERT INTO `bank_list` (`id`, `name`, `status`, `user_c`, `user_m`, `created_date`, `modified_date`) VALUES
 (1, 'BCA', 'active', 1, NULL, '2016-10-06 06:58:39', NULL),

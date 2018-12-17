@@ -71,13 +71,14 @@
 							$employee_data = $this->employee_model->get_emp(array('employee.id' => $this->input->post('emp_id')))[0];
 							$employee_id = $employee_data['id'];
 							$client_id = $employee_data['client_id'];
+							$project_id = $employee_data['project_id'];
 							$finger_id = $employee_data['finger_id'];
 							$period = $this->input->post('year').'-'.$this->input->post('month');
 
 							$attended_period = $this->attendance_model->get_attd_period(array('attendance_period.emp_id' => $employee_id , 'attendance_period.period' => $period));
 							if(empty($attended_period) ){ // data not exist yet
 
-								$return_id = $this->input_firsttime($finger_id,$period,$employee_id,$client_id);
+								$return_id = $this->input_firsttime($finger_id,$period,$employee_id,$client_id,$project_id);
 								//$return_id = $this->attendance_model->insert_attd($period_data,$detail_data);
 
 								redirect('/attendance/edit/'.$return_id);
@@ -103,9 +104,9 @@
 
         }
 
-		private function input_firsttime($finger_id,$period,$employee_id,$client_id)
+		private function input_firsttime($finger_id,$period,$employee_id,$client_id,$project_id)
 		{
-			$timing = $this->attendance_timing_model->get_timing(array('attendance_timing.client_id'=> $client_id));
+			$timing = $this->attendance_timing_model->get_timing(array('attendance_timing.client_id'=> $client_id, 'attendance_timing.project_id'=> $project_id));
 			// Insert data
 			// Initialize data
 			$detail_data = array();
@@ -121,11 +122,12 @@
 			$leaves_data = array();
 
 			//get raw attendance
-			$raw = $this->raw_attendance_model->get_ra($finger_id,$period,$client_id);
+			$raw = $this->raw_attendance_model->get_ra($finger_id,$period,$client_id,$project_id);
 			//get medical reimbursment
 			$medical_reimbursement = $this->medical_model->get_medical_reimbursement(array('emp_id' => $employee_id, 'date >=' => $period.'-01','date <= ' => date('Y-m-t' , strtotime($period.'-01'))));
 			//get holiday
 			$holiday_raw = $this->holiday_model->get_holiday(array('date >=' => $period.'-01','date <= ' => date('Y-m-t' , strtotime($period.'-01')), 'status' => 'active'));
+			
 			//get overtime data
 			$overtime = $this->overtime_model->get_overtime(array('emp_id' => $employee_id, 'date >=' => $period.'-01','date <= ' => date('Y-m-t' , strtotime($period.'-01')),'overtime.status' => 'active'));
 
@@ -134,7 +136,7 @@
 					$holiday[] = $value['date'];
 				}
 			}
-			//get overtime
+			//get overtime (per day)
 			$overtime_total = $this->overtime_model->count_overtime($employee_id, $period.'-01', date('Y-m-t' , strtotime($period.'-01') ) );
 
 			//get sick
@@ -172,7 +174,7 @@
 				$late = 0;
 				$daily_report = 0;
 				$weekend = 0; // 0 Week daily , 1 Weekend
-        $overtimeStat = 0;
+				$overtimeStat = 0;
 
 				if(date('D', strtotime($key)) == 'Sat' || date('D', strtotime($key)) == 'Sun' || in_array($key, $holiday)){
 					$weekend = 1;
@@ -237,9 +239,11 @@
 			}
 			//Get employee per this period
 			$client_id = $this->employee_model->get_emp(array('employee.id' => $employee_id))[0]['client_id'];
+			$project_id = $this->employee_model->get_emp(array('employee.id' => $employee_id))[0]['project_id'];
 			$period_data = array(
 						'emp_id' => $employee_id,
 						'client_id' => $client_id,
+						'project_id' => $project_id,
 						'period' => $period,
 						'leaves_total' => $day_off_total,
 						'attend_total' => $attend_total,
@@ -255,7 +259,7 @@
 			return $this->attendance_model->insert_attd($period_data,$detail_data);
 		}
 
-		public function edit($attend_perido_id) {
+		public function edit($attend_period_id) {
 			if ($this->input->server('REQUEST_METHOD') != 'POST'){
 				$this->front_stuff();
 				$this->data['box_title_1'] = 'Input Attendance';
@@ -273,7 +277,7 @@
 										'vendor/bootstrap-toggle-master/js/bootstrap-toggle.min.js',
 										'page/js/attendanceinput.js'
 									));
-				$attendance_period = $this->attendance_model->get_attd_period(array('attendance_period.id' => $attend_perido_id));
+				$attendance_period = $this->attendance_model->get_attd_period(array('attendance_period.id' => $attend_period_id));
 				if($attendance_period[0]['status'] == 'posted'){
 					redirect('/attendance/view/'.$attended_period[0]['id']);
 				}
@@ -295,13 +299,13 @@
 									'leaves' => $this->leaves_model->get_leaves(array('emp_id' => $attendance_period[0]['emp_id'],'date >=' => $attendance_period[0]['period'].'-01', 'date <=' => date('Y-m-t', strtotime($attendance_period[0]['period'].'-01')) ,'leaves.status' => 'active')),
 									'holiday' => $holiday,
 									'attendant_period' => $attendance_period,
-									'attendant_detail' => $this->attendance_model->get_attd_detail(array('attd_period_id' => $attend_perido_id)),
+									'attendant_detail' => $this->attendance_model->get_attd_detail(array('attd_period_id' => $attend_period_id)),
 									'status_view' => 0
 								);
 				$this->layout();
 			}else{
 				try{
-					$period_data = $this->attendance_model->get_attd_period(array('attendance_period.id' => $attend_perido_id));
+					$period_data = $this->attendance_model->get_attd_period(array('attendance_period.id' => $attend_period_id));
 					$post_status = $period_data[0]['status'];
 					$emp_id = $period_data[0]['emp_id'];
 					$period = $period_data[0]['period'];
@@ -393,7 +397,7 @@
 							// more then start this year period
 							elseif(date('Y-m', strtotime($period)) > date('Y-m', strtotime(date('Y').'-05-01')) )
 							{
-                if(date('Y-m', strtotime($period)) >  date('Y-m', strtotime(date('Y').'-05-01')) )
+								if(date('Y-m', strtotime($period)) >  date('Y-m', strtotime(date('Y').'-05-01')) )
 								{
 									$qac = $this->leaves_qac_model->get_qac(array('period' => date('Y-m', strtotime($period.' -1 months')), 'emp_id' => $emp_id));
 								}else{
@@ -412,7 +416,10 @@
 					{
 						//update
 						$leaves_remains = array(
-										'leaves_remain' => ($overtime_total-$day_off_total+$default_leaves)+($last_leaves),
+										// OLD Formula
+										//'leaves_remain' => ($overtime_total-$day_off_total+$default_leaves)+($last_leaves),
+										// NEW Formula 12/17/2018
+										'leaves_remain' => ($day_off_total+$default_leaves)+($last_leaves),
 										'user_m' => $this->session->userdata('logged_in_data')['id']
 									);
 						$this->leaves_qac_model->update_qac_leaves($emp_id,$period,$leaves_remains);
@@ -421,7 +428,10 @@
 						$leaves_remains = array(
 										'emp_id' => $emp_id,
 										'period' => $period,
-										'leaves_remain' => ($overtime_total-$day_off_total+$default_leaves)+($last_leaves)
+										// OLD Formula
+										//'leaves_remain' => ($overtime_total-$day_off_total+$default_leaves)+($last_leaves)
+										// NEW Formula 12/17/2018
+										'leaves_remain' => ($day_off_total+$default_leaves)+($last_leaves)
 									);
 						$this->leaves_qac_model->insert_qac_leaves($leaves_remains);
 					}
@@ -437,7 +447,7 @@
 										'daily_report_total' => $daily_report_total,
 										'user_m' => $this->session->userdata('logged_in_data')['id']
 									);
-					if( $this->attendance_model->update_attendance($period_data,$detail_data,$attend_perido_id) )
+					if( $this->attendance_model->update_attendance($period_data,$detail_data,$attend_period_id) )
 					{
 						$this->session->set_flashdata('form_status', 1);
 						$this->session->set_flashdata('form_msg', 'Success Edit Attendace Data');
@@ -451,7 +461,7 @@
 				if($post_status == 'posted'){
 						redirect('attendance/input');
 				}else{
-					redirect('attendance/edit/'.$attend_perido_id);
+					redirect('attendance/edit/'.$attend_period_id);
 				}
 			}
 		}
@@ -609,10 +619,10 @@
 			return true;
 		}
 
-		public function regenerate($attend_perido_id)
+		public function regenerate($attend_period_id)
 		{
 			$return_id = '';
-			$period_datas = $this->attendance_model->get_attd_period(array('attendance_period.id' => $attend_perido_id));
+			$period_datas = $this->attendance_model->get_attd_period(array('attendance_period.id' => $attend_period_id));
 			if(!empty($period_datas))
 			{
 				$period_data = $period_datas[0];
@@ -646,7 +656,7 @@
 
 		}
 
-		public function view($attend_perido_id)
+		public function view($attend_period_id)
 		{
 			$this->front_stuff();
 				$this->data['box_title_1'] = 'Input Attendance';
@@ -664,7 +674,7 @@
 										'vendor/bootstrap-toggle-master/js/bootstrap-toggle.min.js',
 										'page/js/attendanceinput.js'
 									));
-				$attendance_period = $this->attendance_model->get_attd_period(array('attendance_period.id' => $attend_perido_id));
+				$attendance_period = $this->attendance_model->get_attd_period(array('attendance_period.id' => $attend_period_id));
 
 				$this->contents = 'attendance/input'; // its your view name, change for as per requirement.
 
@@ -685,7 +695,7 @@
 									'leaves' => $this->leaves_model->get_leaves(array('emp_id' => $attendance_period[0]['emp_id'],'date >=' => $attendance_period[0]['period'].'-01', 'date <=' => date('Y-m-t', strtotime($attendance_period[0]['period'].'-01')) ,'leaves.status' => 'active')),
 									'holiday' => $holiday,
 									'attendant_period' => $attendance_period,
-									'attendant_detail' => $this->attendance_model->get_attd_detail(array('attd_period_id' => $attend_perido_id)),
+									'attendant_detail' => $this->attendance_model->get_attd_detail(array('attd_period_id' => $attend_period_id)),
 									'status_view' => 1
 								);
 				$this->layout();

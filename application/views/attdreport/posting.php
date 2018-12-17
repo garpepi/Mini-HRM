@@ -43,13 +43,13 @@
 									</select>
 								</div>
 								<div class="form-group">
-									<label>Client</label>
-									<select name='client' id='client' class="form-control" required>
-									<option value='' selected>Choose Client</option>
+									<label>Client - Project</label>
+									<select name='project_id' id='project_id' class="form-control" required>
+									<option value='' selected>Choose Client - Project</option>
 									<?php 
-										foreach($contents['clients'] as $key => $value){
+										foreach($contents['projects'] as $key => $value){
 											?>
-											<option value='<?php echo $value['id'];?>'><?php echo $value['name'];?></option>
+											<option value='<?php echo $value['id'];?>'><?php echo $value['name'].' - '.$value['client_name'];?></option>
 											<?php
 										}
 									?>
@@ -127,7 +127,7 @@
 						</div>
 						<!-- /.col-lg-12 -->
 						<div class="col-lg-12">
-						<form onsubmit="return confirm('Do you really want to post for period <?php echo $contents['period'];?> ?');" action='<?php echo base_url().'attdreport/dopost/'.$contents['period'].'/'.$contents['client_id'] ; ?>' method='post'>
+						<form onsubmit="return confirm('Do you really want to post for period <?php echo $contents['period'];?> ?');" action='<?php echo base_url().'attdreport/dopost/'.$contents['period'].'/'.$contents['client_id'].'/'.$contents['project_id'] ; ?>' method='post'>
 							<button type="submit" class="btn btn-default">Post</button>
 						</form>
 						</div>
