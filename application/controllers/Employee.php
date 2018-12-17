@@ -382,7 +382,7 @@
 
 				if($this->form_validation->run()){
 					try{
-						$client_id = $this->projects_model->get_projects(array("projects.id" => $data['project_id'], "projects.status" => "Active"))["client_id"];
+						$client_id = $this->projects_model->get_projects(array("projects.id" => $data['project_id'], "projects.status" => "Active"))[0]["client_id"];
 						$data['client_id'] = $client_id;
 						if(($original_value['client_id'] != 3) && ($original_value['client_id'] != 0) && ($data['client_id'] !== $original_value['client_id']) ){ //3 Adidata
 							// delete others Qatracker if exist
@@ -585,7 +585,7 @@
 						if($qatrackerroute == 'Mandiri'){
 							$qatrackerroute = '';
 						}*/
-						$client_id = $this->projects_model->get_projects(array("projects.id" => $data['project_id'], "projects.status" => "Active"))["client_id"];
+						$client_id = $this->projects_model->get_projects(array("projects.id" => $data['project_id'], "projects.status" => "Active"))[0]["client_id"];
 						$data['client_id'] = $client_id;
 						$qatrackerroute = $data['client_id'];
 						$id = $this->employee_model->insert_emp($data);
