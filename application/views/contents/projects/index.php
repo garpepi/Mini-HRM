@@ -58,11 +58,15 @@
 										</div>
 										<div class="form-group date">
 											<label>Come In</label>
-											<input name='time_in' class="form-control timeep" value ='<?php echo (repopulate_form('time_in') != '' ? repopulate_form('time_in'): $contents['data']['time_in']) ;?>' timeep>
+											<input name='time_in' class="form-control timeep" value ='<?php echo (!empty($contents['data']['time_in']) ? (repopulate_form('time_in') != '' ? repopulate_form('time_in'): $contents['data']['time_in']) : '') ;?>' timeep>
 										</div>
 										<div class="form-group date">
 											<label>Go Home</label>
-											<input name='time_out' class="form-control timeep" value ='<?php echo (repopulate_form('time_out') != '' ? repopulate_form('time_out'): $contents['data']['time_out']) ;?>' timeep>
+											<input name='time_out' class="form-control timeep" value ='<?php echo (!empty($contents['data']['time_out']) ? (repopulate_form('time_out') != '' ? repopulate_form('time_out'): $contents['data']['time_out']) : '') ;?>' timeep>
+										</div>
+										<div class="form-group date">
+											<label>Start Overtime</label>
+											<input name='time_overtime' class="form-control timeep" value ='<?php echo (!empty($contents['data']['time_overtime']) ? (repopulate_form('time_overtime') != '' ? repopulate_form('time_overtime'): $contents['data']['time_overtime']) : '') ;?>' timeep>
 										</div>
 										<?php endif;?>
 										<?php if($this->uri->segment(2) == 'edit'):?>

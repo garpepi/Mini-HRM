@@ -52,7 +52,7 @@
 											<thead>
 												<tr>
 													<th>Client</th>
-													<th>Client</th>
+													<th>Projects</th>
 													<th>Action</th>
 												</tr>
 											</thead>

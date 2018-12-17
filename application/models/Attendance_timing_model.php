@@ -45,8 +45,9 @@ class Attendance_timing_model extends CI_Model {
 	{
 		$insetData = array(
 				array('project_id' => $data['project_id'],'client_id' => $data['client'],'name' => 'comes', 'showed_name'=>'Come In', 'time' => $data['time_in'], 'user_c' => $data['user_c']),
-				array('project_id' => $data['project_id'],'client_id' => $data['client'],'name' => 'go_home', 'showed_name'=>'Go Home', 'time' => $data['time_out'], 'user_c' => $data['user_c'])
-		);
+				array('project_id' => $data['project_id'],'client_id' => $data['client'],'name' => 'go_home', 'showed_name'=>'Go Home', 'time' => $data['time_out'], 'user_c' => $data['user_c']),
+				array('project_id' => $data['project_id'],'client_id' => $data['client'],'name' => 'start_overtime', 'showed_name'=>'Start Overtime', 'time' => $data['time_overtime'], 'user_c' => $data['user_c'])
+				);
 		return $this->db->insert_batch('attendance_timing',$insetData);
 	}
 
