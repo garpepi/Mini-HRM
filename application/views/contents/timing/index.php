@@ -23,19 +23,40 @@
 						<?php if($this->uri->segment(2)== 'edit'):?>
 						<div class="col-lg-12">
 							<div class="col-lg-12">
-								<form role="form" method='post' action='<?php echo base_url().'attendancetiming/'.($this->uri->segment(2) == 'edit' ? 'edit/'.$contents['data']['id'] : 'add');?>'>
+								<form role="form" method='post' action='<?php echo base_url().'attendancetiming/'.($this->uri->segment(2) == 'edit' ? 'edit/'.$contents['data'][0]['client_id'].'/'.$contents['data'][0]['project_id'] : 'add');?>'>
 									<div class="form-group">
 										<label>Name</label>
-										<input disabled class="form-control" value ='<?php echo $contents['data']['showed_name'] ;?>' >
+										<input disabled class="form-control" value ='<?php echo $contents['data'][0]['showed_name'] ;?>' >
 									</div>
 									<div class="form-group">
 										<label>Client</label>
-										<input disabled class="form-control" value ='<?php echo $contents['data']['client_name'] ;?>' >
+										<input disabled class="form-control" value ='<?php echo $contents['data'][0]['client_name'] ;?>' >
 									</div>
+									<?php
+									$comes = $go_home = $start_overtime = 0;
+									foreach($contents['data'] as $key => $value)
+									{
+										if($value['name'] == 'comes')
+										{
+											$comes = 1;
+										}
+										if($value['name'] == 'go_home')
+										{
+											$go_home = 1;
+										}
+										if($value['name'] == 'start_overtime')
+										{
+											$start_overtime = 1;
+										}	
+									?>
 									<div class="form-group date">
-										<label>Time</label>
-										<input name='time' class="form-control timeep" value ='<?php echo (repopulate_form('time') != '' ? repopulate_form('time'): $contents['data']['time']) ;?>' timeep>
+										<label><?php echo $value['showed_name'];?></label>
+										<input name='<?php echo $value['id'];?>' class="form-control timeep" value ='<?php echo (repopulate_form($value['id']) != '' ? repopulate_form($value['id']): $value['time']) ;?>' timeep>
 									</div>
+									<?php 
+									}
+									// tambahakan nanti logic jika paramter tidak ada
+									?>
 									<button type="submit" class="btn btn-default">Submit</button>
 									<button type="reset" class="btn btn-default">Reset </button>
 								</form>
@@ -53,8 +74,6 @@
 												<tr>
 													<th>Client</th>
 													<th>Project</th>
-													<th>Name</th>
-													<th>Time</th>
 													<th>Action</th>
 												</tr>
 											</thead>
@@ -63,10 +82,8 @@
 												<tr>
 													<td><?php echo $value['client_name']; ?></td>
 													<td><?php echo $value['project_name']; ?></td>
-													<td><?php echo $value['showed_name']; ?></td>
-													<td><?php echo $value['time']; ?></td>
 													<td>
-														<a class="btn btn-secondary btn-xs" href='<?php echo base_url().'attendancetiming/edit/'.$value['id'];?>'><i class="fa fa-edit"></i> Edit</a>
+														<a class="btn btn-secondary btn-xs" href='<?php echo base_url().'attendancetiming/edit/'.$value['client_id'].'/'.$value['project_id'];?>'><i class="fa fa-edit"></i> View/Edit</a>
 													</td>
 												</tr>
 												<?php endforeach;?>

@@ -303,14 +303,26 @@
 						}
 						foreach($overtimes as $keyOver => $valueOver)
 						{
+							$start_in = '';
+							// check start_in
+							if(is_null($valueOver['start_in']) || strtotime($valueOver['start_in']) == strtotime('0000-00-00 00:00:00'))
+							{
+								$start_in = date('Y-m-d',strtotime($valueOver['end_out'])).' '.$timing['start_overtime']['time'];
+							}
+							else
+							{
+								$start_in = $valueOver['start_in'];
+							}
+							
 							// time different
-							$difference = floor(abs(strtotime($valueOver['time_go_home']) - strtotime($timing['go_home']['time']))/3600);
+							$difference = floor(abs(strtotime($start_in) - strtotime($valueOver['end_out']))/3600);
 							if($difference > 15)
 							{
 								$difference = 15;
 							}
-							// divers holidays and not
-							if(date('D', strtotime($valueOver['date'])) == 'Sat' || date('D', strtotime($valueOver['date'])) == 'Sun' || in_array($valueOver['date'], $holiday))
+							
+							// divers start_in holidays and not
+							if(date('D', strtotime($start_in)) == 'Sat' || date('D', strtotime($start_in)) == 'Sun' || in_array($start_in, $holiday))
 							{
 								// holiday
 								$overtime_holiday += $allowance['we_overtime_'.$difference.'h'];
