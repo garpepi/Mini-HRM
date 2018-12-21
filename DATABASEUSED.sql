@@ -470,6 +470,8 @@ CREATE TABLE `overtime` (
   `emp_id` bigint(20) NOT NULL,
   `reason` varchar(255) COLLATE utf32_unicode_ci NOT NULL,
   `time_go_home` time NOT NULL,
+  `start_in` timestamp NULL DEFAULT NULL,
+  `end_out` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `status` enum('active','inactive') COLLATE utf32_unicode_ci NOT NULL DEFAULT 'active',
   `user_c` bigint(20) NOT NULL,
   `user_m` bigint(20) DEFAULT NULL,
