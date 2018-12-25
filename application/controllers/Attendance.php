@@ -106,7 +106,11 @@
 
 		private function input_firsttime($finger_id,$period,$employee_id,$client_id,$project_id)
 		{
-			$timing = $this->attendance_timing_model->get_timing(array('attendance_timing.client_id'=> $client_id, 'attendance_timing.project_id'=> $project_id));
+			$timing = $this->attendance_timing_model->get_timing(array('attendance_timing.client_id'=> $client_id, 'attendance_timing.project_id'=> $project_id,'attendance_timing.status'=> 'active' ));
+			if(empty($timing))
+			{
+				throw new Exception("Attendance timing not set");
+			}
 			// Insert data
 			// Initialize data
 			$detail_data = array();
@@ -639,7 +643,7 @@
 
 				try{
 					$this->attendance_model->regenerate_attendance_period($period_data,$period_data['id_old']);
-					$return_id = $this->input_firsttime($employee_data['finger_id'],$period_data['period'],$period_data['emp_id'],$employee_data['client_id']);
+					$return_id = $this->input_firsttime($employee_data['finger_id'],$period_data['period'],$period_data['emp_id'],$employee_data['client_id'],$employee_data['project_id']);
 				}catch(Exception $e){
 					throw new Exception('Error on Regnerate data.');
 				}

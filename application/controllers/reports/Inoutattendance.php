@@ -154,10 +154,14 @@
 							$time_workday= array();
 							$periodd = array();
 							$countemp = 0;
-							$timing = $this->attendance_timing_model->get_timing(array('attendance_timing.client_id' => $this->input->post('client')));
+							$timing = $this->attendance_timing_model->get_timing(array('attendance_timing.client_id'=> $client_id, 'attendance_timing.project_id'=> $project_id,'attendance_timing.status'=> 'active' ));
 							$totalworkinghhour = array();
 							$latehour = array();
-
+							
+							if(empty($timing))
+							{
+								throw new Exception("Attendance timing not set");
+							}
 							foreach($detail_data as $key => $value)
 							{
 								$period_data = $this->attendancereport_model->get_report_spesific($value['emp_id'],date('Y-m',strtotime('01-'.$site_date)));

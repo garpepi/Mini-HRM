@@ -4,8 +4,7 @@
 		public function __construct(){
 			parent::__construct();
 			$this->load->model('attendance_timing_model');
-			$this->load->model('division_model');
-			
+			$this->load->model('projects_model');
 		}
 		
 		private function front_stuff(){
@@ -71,5 +70,51 @@
 				}
 				redirect('/attendancetiming');
 			}
-        }		
+        }
+		
+		public function add() {			
+			if ($this->input->server('REQUEST_METHOD') != 'POST'){
+				$this->front_stuff();
+				$this->contents = 'contents/timing/form';   // its your view name, change for as per requirement.
+				$this->data['contents'] = array(
+									'projects' => $this->projects_model->get_projects(array("projects.status" =>  'active')),
+									'data' => array()
+								);
+				$this->layout();
+			}else{
+				$this->form_validation->set_rules('project_id', 'Projects', 'required');
+				$this->form_validation->set_rules('time_in', 'Come In', 'required');
+				$this->form_validation->set_rules('time_out', 'Go Home', 'required');
+				$this->form_validation->set_rules('time_overtime', 'Start overtime', 'required');
+				
+				try{
+					if($this->form_validation->run()){
+						$data = $this->input->post();
+						$data['user_c'] = $this->session->userdata('logged_in_data')['id'];
+						$data['client'] = $client_id = $this->projects_model->get_projects(array("projects.id" => $data['project_id'], "projects.status" => "Active"))[0]["client_id"];
+					//	$this->stop_fancy_print($data);
+						
+						if(!empty($this->attendance_timing_model->get_timing(array('status' => 'active','client_id' => $data['client'],'project_id' => $data['project_id']))))
+						{
+							throw new Exception('Active attendance timing settings exist!');
+						}
+						
+						if(!$this->attendance_timing_model->insert_attendance_timing($data)){
+							throw new Exception('Error on insert');	
+						}else{
+							$this->session->set_flashdata('form_status', 1);
+							$this->session->set_flashdata('form_msg', 'Success on add set of attendance timing');
+						}
+					}else{
+						throw new Exception(validation_errors());	
+					}
+				}catch(Exception $exp){
+					$this->session->set_flashdata('form_data', $this->input->post());
+					$this->session->set_flashdata('form_status', 0);
+					$this->session->set_flashdata('form_msg', $exp->getMessage());
+					redirect('/attendancetiming/add');
+				}				
+				redirect('/attendancetiming');
+			}
+        }
     }

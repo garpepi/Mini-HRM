@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 17, 2018 at 04:46 PM
+-- Generation Time: Dec 26, 2018 at 01:54 AM
 -- Server version: 10.1.31-MariaDB
 -- PHP Version: 7.2.3
 
@@ -11,12 +11,6 @@ SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
 
 --
 -- Database: `minihrm`
@@ -103,6 +97,7 @@ CREATE TABLE `attendance_period_history` (
   `id_old` bigint(20) NOT NULL,
   `emp_id` bigint(20) NOT NULL,
   `client_id` int(11) NOT NULL,
+  `project_id` int(11) NOT NULL,
   `period` varchar(7) COLLATE utf32_unicode_ci NOT NULL,
   `leaves_total` int(11) NOT NULL,
   `attend_total` int(11) NOT NULL,
@@ -129,6 +124,10 @@ CREATE TABLE `attendance_period_history` (
 CREATE TABLE `attendance_report` (
   `id` bigint(20) NOT NULL,
   `emp_id` bigint(20) NOT NULL,
+  `client_id` int(11) NOT NULL,
+  `project_id` int(11) NOT NULL,
+  `client_name` varchar(30) COLLATE utf32_unicode_ci NOT NULL,
+  `project_name` varchar(30) COLLATE utf32_unicode_ci NOT NULL,
   `name` varchar(255) COLLATE utf32_unicode_ci NOT NULL,
   `period` varchar(7) COLLATE utf32_unicode_ci NOT NULL,
   `leaves_remaining` int(11) NOT NULL,
@@ -184,7 +183,7 @@ CREATE TABLE `autoreport_email` (
   `id` int(11) NOT NULL,
   `email` varchar(50) NOT NULL,
   `client` varchar(50) NOT NULL,
-  `status` enum('active','inactive') NOT NULL,
+  `status` enum('active','inactive') NOT NULL DEFAULT 'active',
   `user_c` bigint(20) NOT NULL,
   `user_m` bigint(20) DEFAULT NULL,
   `created_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -875,6 +874,7 @@ ALTER TABLE `sick`
 ALTER TABLE `users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
+
 
 INSERT INTO `bank_list` (`id`, `name`, `status`, `user_c`, `user_m`, `created_date`, `modified_date`) VALUES
 (1, 'BCA', 'active', 1, NULL, '2016-10-06 06:58:39', NULL),

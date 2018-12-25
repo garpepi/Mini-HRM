@@ -78,8 +78,7 @@
 						$period = $this->input->post('year').'-'.$this->input->post('month');
 						$project_id = $this->input->post('project');
 						$client_id = $this->projects_model->get_projects(array("projects.id" => $project_id, "projects.status" => "Active"))[0]["client_id"];
-					
-						
+
 						$all = 0;
 						$selected_employee = '';
 						foreach($this->input->post('employee') as $key => $value){
@@ -271,7 +270,12 @@
 					
 					$period_report = array();
 					$date_post = date('Y-m-d H:i:s');
-					$allowance = $this->allowance_model->get_allowance(array('allowance.client_id' => $client_id,'allowance.project_id' => $project_id));
+					$allowance = $this->allowance_model->get_allowance(array('allowance.status' => 'active','allowance.client_id' => $client_id,'allowance.project_id' => $project_id));
+					if(empty($allowance))
+					{
+						throw new Exception('Please set Allowance!');
+					}
+					$this->stop_fancy_print($allowance);
 					$attendance_period = $this->attendance_model->get_attd_period(array('attendance_period.period' => $period, 'attendance_period.status' => 'not post', 'attendance_period.client_id' => $client_id, 'attendance_period.project_id' => $project_id));
 
 					foreach($attendance_period as $key => $value){
@@ -293,7 +297,11 @@
 						$overtime_holiday = 0;
 						$overtime_regular = 0;
 						
-						$timing = $this->attendance_timing_model->get_timing(array('attendance_timing.client_id'=> $client_id, 'attendance_timing.project_id'=> $project_id));
+						$timing = $this->attendance_timing_model->get_timing(array('attendance_timing.client_id'=> $client_id, 'attendance_timing.project_id'=> $project_id, 'attendance_timing.status'=> 'active'));
+						if(empty($timing))
+						{
+							throw new Exception("Attendance timing not set");
+						}
 						$holiday = array();
 						$holiday_raw = $this->holiday_model->get_holiday(array('date >=' => $period.'-01','date <= ' => date('Y-m-t' , strtotime($period.'-01')), 'status' => 'active'));
 						if(!empty($holiday_raw)){
@@ -343,8 +351,15 @@
 						}else{
 							$leaves_remaining = $this->leaves_model->count_leaves($value['emp_id'], date('Y').'-05-01', date('Y')+1 .'-04-31');
 						}
+						// get client and project name
+						$proejcts_client = $this->projects_model->get_projects(array("projects.id" => $project_id, "projects.status" => "Active"));
+						
 						$period_report[] = array(
 											'emp_id' => $value['emp_id'],
+											'client_id' => $client_id,
+											'project_id' => $project_id,
+											'client_name' => $proejcts_client[0]["client_name"],
+											'project_name' =>$proejcts_client[0]["name"],
 											'name' => $value['employee_data']['name'],
 											'period' => $period,
 											'leaves_remaining' => $leaves_remaining,
