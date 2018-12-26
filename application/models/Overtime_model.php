@@ -6,14 +6,27 @@ class Overtime_model extends CI_Model {
         parent::__construct();
     }
 	
-	public function get_overtime($where = array())
+	public function get_overtime($where = array(), $order_by=array())
     {    
         $this->db->select('overtime.*, employee.name as employee_name');
         $this->db->from('overtime');
 		$this->db->join('employee','overtime.emp_id = employee.id');
 		$this->db->where($where);
+		if(!empty($order_by))
+		{
+			$this->db->order_by("id","desc");
+		}
         $query = $this->db->get();
         return $query->result_array();
+    }
+	
+	public function json($where = array()) {
+        $this->datatables->select('overtime.id, overtime.date as date, overtime.reason as reason, employee.name as employee_name');
+        $this->datatables->from('overtime');
+        $this->datatables->join('employee', 'overtime.emp_id = employee.id');
+		$this->datatables->where($where);
+        $this->datatables->add_column('action', '<a href='.base_url()."overtime/edit/.$1".' class="btn btn-secondary btn-xs"><i class="fa fa-edit"></i> Edit</a> / <a href='.base_url()."overtime/revoke/.$1".' class="btn btn-secondary btn-xs"><i class="fa fa-edit"></i> Revoke</a>', 'id');
+        return $this->datatables->generate();
     }
 	
 	public function count_overtime($emp_id = 0, $start = '', $end = '')

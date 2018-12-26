@@ -29,17 +29,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							<?php foreach($contents['active_table'] as $key => $value):?>
-								<tr>
-									<td><?php echo $value['date'];?></td>
-									<td><?php echo $value['employee_name'];?></td>
-									<td><?php echo $value['reason'];?></td>
-									<td>
-										<a href="<?php echo base_url().'overtime/edit/'.$value['id'];?>" class="btn btn-secondary btn-xs"><i class="fa fa-edit"></i> Edit</a>
-										<a href="<?php echo base_url().'overtime/revoke/'.$value['id'];?>" class="btn btn-secondary btn-xs"><i class="fa fa-edit"></i> Revoke</a>
-									</td>
-								</tr>
-							<?php endforeach;?>
+							
 						</tbody>
 					</table>
 					<!-- /.table-responsive -->
@@ -62,16 +52,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							<?php foreach($contents['inactive_table'] as $key => $value):?>
-								<tr>
-									<td><?php echo $value['date'];?></td>
-									<td><?php echo $value['employee_name'];?></td>
-									<td><?php echo $value['reason'];?></td>
-									<td>
-										<a href="<?php echo base_url().'overtime/reactivate/'.$value['id'];?>" class="btn btn-secondary btn-xs"><i class="fa fa-edit"></i> Reactivate</a>
-									</td>
-								</tr>
-							<?php endforeach;?>
+							
 						</tbody>
 					</table>
 					<!-- /.table-responsive -->
