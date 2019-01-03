@@ -154,7 +154,14 @@
 							$time_workday= array();
 							$periodd = array();
 							$countemp = 0;
-							$timing = $this->attendance_timing_model->get_timing(array('attendance_timing.client_id'=> $client_id, 'attendance_timing.project_id'=> $project_id,'attendance_timing.status'=> 'active' ));
+							if(date('Y-m-d',strtotime($start_date)) > date('Y-m-d',strtotime('30-11-2018')) ) // last big update
+							{
+								$timing = $this->attendance_timing_model->get_timing(array('attendance_timing.client_id'=> $this->input->post('client'), 'attendance_timing.project_id'=> $project_id,'attendance_timing.status'=> 'active' ));								
+							}
+							else
+							{
+								$timing = $this->attendance_timing_model->get_timing(array('attendance_timing.client_id'=> $this->input->post('client'),'attendance_timing.status'=> 'inactive'));	// backward compatibility
+							}
 							$totalworkinghhour = array();
 							$latehour = array();
 							
