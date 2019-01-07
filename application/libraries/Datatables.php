@@ -142,6 +142,20 @@
       $this->ci->db->where($key_condition, $val, $backtick_protect);
       return $this;
     }
+	
+	/**
+    * Generates the WHERE portion of the query
+    *
+    * @param mixed $key_condition
+    * @param string $val
+    * @param bool $backtick_protect
+    * @return mixed
+    */
+    public function order_by($key_condition, $val = NULL, $backtick_protect = TRUE)
+    {
+      $this->ci->db->order_by($key_condition, $val, $backtick_protect);
+      return $this;
+    }
 
     /**
     * Generates the WHERE portion of the query

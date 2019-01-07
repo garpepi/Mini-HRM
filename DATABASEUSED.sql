@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 26, 2018 at 01:54 AM
+-- Generation Time: Jan 07, 2019 at 03:16 PM
 -- Server version: 10.1.31-MariaDB
 -- PHP Version: 7.2.3
 
@@ -468,7 +468,7 @@ CREATE TABLE `overtime` (
   `date` date NOT NULL,
   `emp_id` bigint(20) NOT NULL,
   `reason` varchar(255) COLLATE utf32_unicode_ci NOT NULL,
-  `time_go_home` time NOT NULL,
+  `time_go_home` time DEFAULT NULL,
   `start_in` timestamp NULL DEFAULT NULL,
   `end_out` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `status` enum('active','inactive') COLLATE utf32_unicode_ci NOT NULL DEFAULT 'active',
@@ -508,6 +508,30 @@ CREATE TABLE `raw_attendance` (
   `date` date NOT NULL,
   `tap_time` time NOT NULL,
   `user_c` int(11) NOT NULL,
+  `created_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `modified_date` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf32 COLLATE=utf32_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `raw_overtime`
+--
+
+CREATE TABLE `raw_overtime` (
+  `id` bigint(20) NOT NULL,
+  `no` bigint(20) NOT NULL,
+  `date` date NOT NULL,
+  `emp_id` bigint(20) NOT NULL,
+  `name` varchar(255) COLLATE utf32_unicode_ci NOT NULL,
+  `reason` varchar(255) COLLATE utf32_unicode_ci NOT NULL,
+  `start_in` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `end_out` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `upload_status` enum('queue','RBS','RBA','rejected','accepted','duplicate') COLLATE utf32_unicode_ci NOT NULL,
+  `status` enum('active','inactive') COLLATE utf32_unicode_ci NOT NULL DEFAULT 'active',
+  `desc_status` varchar(255) COLLATE utf32_unicode_ci DEFAULT NULL,
+  `user_c` bigint(20) NOT NULL,
+  `user_m` bigint(20) DEFAULT NULL,
   `created_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modified_date` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf32 COLLATE=utf32_unicode_ci;
@@ -703,6 +727,12 @@ ALTER TABLE `raw_attendance`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `raw_overtime`
+--
+ALTER TABLE `raw_overtime`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `sick`
 --
 ALTER TABLE `sick`
@@ -861,6 +891,12 @@ ALTER TABLE `projects`
 --
 ALTER TABLE `raw_attendance`
   MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `raw_overtime`
+--
+ALTER TABLE `raw_overtime`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `sick`

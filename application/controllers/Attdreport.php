@@ -300,7 +300,7 @@
 						$timing = $this->attendance_timing_model->get_timing(array('attendance_timing.client_id'=> $client_id, 'attendance_timing.project_id'=> $project_id, 'attendance_timing.status'=> 'active'));
 						if(empty($timing))
 						{
-							throw new Exception("Attendance timing not set");
+							throw new Exception("Attendance timing not set for cleint id ".$client_id." and project id ".$project_id);
 						}
 						$holiday = array();
 						$holiday_raw = $this->holiday_model->get_holiday(array('date >=' => $period.'-01','date <= ' => date('Y-m-t' , strtotime($period.'-01')), 'status' => 'active'));

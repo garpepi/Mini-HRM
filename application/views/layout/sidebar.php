@@ -108,6 +108,12 @@
 								<li>
 									<a href="<?php echo base_url().'overtime/add'?>"><i class="fa fa-medkit fa-fw"></i> Add Overtime Record</a>
 								</li>
+								<li>
+									<a href="<?php echo base_url().'overtime/upload'?>"><i class="fa fa-upload fa-fw"></i> Upload Overtime Record</a>
+								</li>
+								<li>
+									<a href="<?php echo base_url().'overtime/raw_queue'?>"><i class="fa fa-list fa-fw"></i> Overtime Queue Record List</a>
+								</li>
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>

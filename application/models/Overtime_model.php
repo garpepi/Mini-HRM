@@ -78,5 +78,61 @@ class Overtime_model extends CI_Model {
 		return true; 
     }
 	
+	public function insert_raw_overtime($data)
+    {   
+		$this->db->trans_begin();
+		$this->db->insert_batch('raw_overtime', $data);			
+		if ($this->db->trans_status() === FALSE)
+		{
+				$this->db->trans_rollback();
+				throw new Exception ('Error on insert');
+		}
+		else
+		{
+				$this->db->trans_commit();
+		}
+		return true; 
+    }
+	
+	public function get_queue_overtime($where = array(), $order_by=array())
+    {    
+        $this->db->select('raw_overtime.*, employee.name as employee_name');
+        $this->db->from('raw_overtime');
+		$this->db->join('employee','raw_overtime.emp_id = employee.id');
+		$this->db->where($where);
+		if(!empty($order_by))
+		{
+			$this->db->order_by("id","desc");
+		}
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+	
+	public function json_queuereject($where = array()) {
+        $this->datatables->select('raw_overtime.*, employee.name as employee_name');
+        $this->datatables->from('raw_overtime');
+        $this->datatables->join('employee','raw_overtime.emp_id = employee.id');
+		$this->datatables->where($where);
+		$this->datatables->order_by("id","desc");
+        return $this->datatables->generate();
+    }
+	
+	public function udpate_raw_overtime($id,$data)
+    {   
+		$this->db->trans_begin();
+			$this->db->where(array('id' => $id));
+			$this->db->update('raw_overtime', $data);			
+		if ($this->db->trans_status() === FALSE)
+		{
+				$this->db->trans_rollback();
+				throw new Exception ('Error on update');
+		}
+		else
+		{
+				$this->db->trans_commit();
+		}
+		return true; 
+    }
+	
 	
 }
