@@ -25,7 +25,7 @@ class Overtime_model extends CI_Model {
         $this->datatables->from('overtime');
         $this->datatables->join('employee', 'overtime.emp_id = employee.id');
 		$this->datatables->where($where);
-        $this->datatables->add_column('action', '<a href='.base_url()."overtime/edit/.$1".' class="btn btn-secondary btn-xs"><i class="fa fa-edit"></i> Edit</a> / <a href='.base_url()."overtime/revoke/.$1".' class="btn btn-secondary btn-xs"><i class="fa fa-edit"></i> Revoke</a>', 'id');
+        $this->datatables->add_column('action', '<a href='.base_url()."overtime/edit/$1".' class="btn btn-secondary btn-xs"><i class="fa fa-edit"></i> Edit</a> / <a href='.base_url()."overtime/revoke/$1".' class="btn btn-secondary btn-xs"><i class="fa fa-edit"></i> Revoke</a>', 'id');
         return $this->datatables->generate();
     }
 	
