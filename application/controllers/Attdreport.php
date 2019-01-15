@@ -275,7 +275,7 @@
 					{
 						throw new Exception('Please set Allowance!');
 					}
-					$this->stop_fancy_print($allowance);
+					//$this->stop_fancy_print($allowance);
 					$attendance_period = $this->attendance_model->get_attd_period(array('attendance_period.period' => $period, 'attendance_period.status' => 'not post', 'attendance_period.client_id' => $client_id, 'attendance_period.project_id' => $project_id));
 
 					foreach($attendance_period as $key => $value){
