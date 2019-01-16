@@ -14,6 +14,7 @@
 			$this->load->model('client_model');
 			$this->load->model('projects_model');
 			$this->load->model('overtime_model');
+			$this->load->model('attendance_timing_model');
 		}
 
 		private function front_stuff(){
@@ -333,12 +334,12 @@
 							if(date('D', strtotime($start_in)) == 'Sat' || date('D', strtotime($start_in)) == 'Sun' || in_array($start_in, $holiday))
 							{
 								// holiday
-								$overtime_holiday += $allowance['we_overtime_'.$difference.'h'];
+								$overtime_holiday += $allowance['we_overtime_'.$difference.'h']["nominal"];
 							}
 							else
 							{
 								// regular
-								$overtime_regular += $allowance['overtime_'.$difference.'h'];
+								$overtime_regular += $allowance['overtime_'.$difference.'h']["nominal"];
 							}
 						}
 						
