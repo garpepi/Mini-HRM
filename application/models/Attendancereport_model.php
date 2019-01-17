@@ -6,13 +6,16 @@ class Attendancereport_model extends CI_Model {
         parent::__construct();
     }
 	
-	public function get_report($start_date,$end_date,$client_id = null)
+	public function get_report($start_date,$end_date,$client_id = null, $project_id= NULL)
     {   
 		$this->db->select('attendance_report.*');
 		$this->db->from('attendance_report');
 		if(!is_null($client_id)){
 			$this->db->join('employee', 'employee.id = attendance_report.emp_id');
 			$this->db->where(array('employee.client_id' => $client_id));
+			if(!is_null($project_id)){
+				$this->db->where(array('employee.project_id' => $project_id));
+			}
 		}
 		$this->db->where(array('period >=' => date('Y-m',strtotime($start_date)),'period <' => date('Y-m',strtotime($end_date))));
 		$this->db->order_by("period", "dsc");
