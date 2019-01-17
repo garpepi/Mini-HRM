@@ -383,7 +383,7 @@
 										);
 					}
 
-					$this->attendance_model->post_attendance_period($period, $period_report, $date_post,$client_id);
+					$this->attendance_model->post_attendance_period($period, $period_report, $date_post,$client_id, $project_id);
 				}catch(Exception $e){
 					$this->session->set_flashdata('form_data', $this->input->post());
 					return_flash(0,$e->getMessage());
