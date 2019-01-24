@@ -20,10 +20,6 @@
 				</div>
 				<div class="panel-body">
 					<div class="row">
-						<div class="col-lg-12">
-							<a href="<?php echo base_url().'allowance/set';?>" class="btn btn-default" role="button" > Set Allowance</a>
-						</div>
-						<hr>
 						<?php if($this->uri->segment(2)== 'edit'):?>
 						<div class="col-lg-12">
 							<div class="col-lg-12">
@@ -48,7 +44,7 @@
 							<div class="col-lg-12">
 								<div class="panel panel-default">
 									<div class="panel-heading">
-										Allowance List
+										Clients List
 									</div>
 									<!-- /.panel-heading -->
 									<div class="panel-body">

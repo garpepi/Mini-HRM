@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 07, 2019 at 03:16 PM
+-- Generation Time: Jan 24, 2019 at 02:08 AM
 -- Server version: 10.1.31-MariaDB
 -- PHP Version: 7.2.3
 
@@ -26,6 +26,7 @@ CREATE TABLE `allowance` (
   `id` int(11) NOT NULL,
   `client_id` int(11) NOT NULL,
   `project_id` int(11) NOT NULL,
+  `employee_position_id` int(11) NOT NULL,
   `name` varchar(255) COLLATE utf32_unicode_ci NOT NULL,
   `showed_name` varchar(255) COLLATE utf32_unicode_ci NOT NULL,
   `nominal` bigint(20) NOT NULL,
@@ -69,6 +70,7 @@ CREATE TABLE `attendance_period` (
   `emp_id` bigint(20) NOT NULL,
   `client_id` int(11) NOT NULL,
   `project_id` int(11) NOT NULL,
+  `employee_position_id` int(11) NOT NULL,
   `period` varchar(7) COLLATE utf32_unicode_ci NOT NULL,
   `leaves_total` int(11) NOT NULL,
   `attend_total` int(11) NOT NULL,
@@ -98,6 +100,7 @@ CREATE TABLE `attendance_period_history` (
   `emp_id` bigint(20) NOT NULL,
   `client_id` int(11) NOT NULL,
   `project_id` int(11) NOT NULL,
+  `employee_position_id` int(11) NOT NULL,
   `period` varchar(7) COLLATE utf32_unicode_ci NOT NULL,
   `leaves_total` int(11) NOT NULL,
   `attend_total` int(11) NOT NULL,
@@ -128,6 +131,8 @@ CREATE TABLE `attendance_report` (
   `project_id` int(11) NOT NULL,
   `client_name` varchar(30) COLLATE utf32_unicode_ci NOT NULL,
   `project_name` varchar(30) COLLATE utf32_unicode_ci NOT NULL,
+  `employee_position_id` int(11) NOT NULL,
+  `employee_position_name` varchar(255) COLLATE utf32_unicode_ci NOT NULL,
   `name` varchar(255) COLLATE utf32_unicode_ci NOT NULL,
   `period` varchar(7) COLLATE utf32_unicode_ci NOT NULL,
   `leaves_remaining` int(11) NOT NULL,
@@ -313,6 +318,7 @@ CREATE TABLE `employee` (
   `div_id` int(11) NOT NULL,
   `birth_of_date` date DEFAULT NULL,
   `employee_status` int(11) NOT NULL,
+  `employee_position` int(11) NOT NULL,
   `hp` varchar(20) COLLATE utf32_unicode_ci NOT NULL,
   `hp2` varchar(20) COLLATE utf32_unicode_ci DEFAULT NULL,
   `address` varchar(255) COLLATE utf32_unicode_ci NOT NULL,
@@ -338,6 +344,22 @@ CREATE TABLE `employee` (
   `created_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modified_date` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   `finger_id` bigint(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf32 COLLATE=utf32_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `employee_position`
+--
+
+CREATE TABLE `employee_position` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) COLLATE utf32_unicode_ci NOT NULL,
+  `status` enum('active','inactive') COLLATE utf32_unicode_ci NOT NULL DEFAULT 'active',
+  `user_c` int(11) NOT NULL,
+  `user_m` int(11) DEFAULT NULL,
+  `created_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `modified_date` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf32 COLLATE=utf32_unicode_ci;
 
 -- --------------------------------------------------------
@@ -488,6 +510,7 @@ CREATE TABLE `projects` (
   `id` int(11) NOT NULL,
   `client_id` int(11) NOT NULL,
   `name` varchar(100) COLLATE utf32_unicode_ci NOT NULL,
+  `leaves_sub` tinyint(1) NOT NULL,
   `status` enum('Active','Inactive') COLLATE utf32_unicode_ci NOT NULL DEFAULT 'Active',
   `user_c` int(11) NOT NULL,
   `user_m` int(11) DEFAULT NULL,
@@ -667,6 +690,12 @@ ALTER TABLE `employee`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `employee_position`
+--
+ALTER TABLE `employee_position`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `employee_status`
 --
 ALTER TABLE `employee_status`
@@ -831,6 +860,12 @@ ALTER TABLE `division`
 --
 ALTER TABLE `employee`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `employee_position`
+--
+ALTER TABLE `employee_position`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `employee_status`

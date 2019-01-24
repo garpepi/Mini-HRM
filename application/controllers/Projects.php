@@ -125,6 +125,7 @@
 			if ($this->input->server('REQUEST_METHOD') == 'POST'){
 				
 				$this->form_validation->set_rules('client_id', 'Client', 'required');
+				$this->form_validation->set_rules('leaves_sub', 'Leaves Substitute for Overtime', 'required');
 				$this->form_validation->set_rules('name', 'Name', 'required');
 				$this->form_validation->set_rules('meal_allowance', 'Meal Allowance', 'required|numeric');
 				$this->form_validation->set_rules('transport', 'Transport', 'required|numeric');

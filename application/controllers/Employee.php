@@ -11,6 +11,7 @@
 			$this->load->model('employee_status_model');
 			$this->load->model('client_model');
 			$this->load->model('projects_model');
+			$this->load->model('employee_position_model');
 		}
 
 		private function front_stuff(){
@@ -70,7 +71,8 @@
   						);
               $this->contents = 'employee/print'; // its your view name, change for as per requirement.
   			$this->data['contents'] = array(
-                'employee_status' => $this->employee_status_model->get_emp_status(array('status' => 'active')),
+							'employee_status' => $this->employee_status_model->get_emp_status(array('status' => 'active')),
+							'employee_position' => $this->employee_position_model->get_emp_position(array('status' => 'active')),
   							'employee' => $this->employee_model->get_emp()
   							);
               $this->layout();
@@ -280,6 +282,7 @@
 							'client_id' => $this->client_model->get_client(array('status' => 1)),
 							'projects_id' => $this->projects_model->get_projects(array('projects.status' => 1)),
 							'employee_status' => $this->employee_status_model->get_emp_status(array('status' => 'active')),
+							'employee_position' => $this->employee_position_model->get_emp_position(array('status' => 'active')),
 							'employee' => $employeeData,
 							'applications' => $applications
 							);
@@ -298,6 +301,7 @@
 				$this->form_validation->set_rules('job_id', 'Job', 'required');
 				$this->form_validation->set_rules('div_id', 'Division', 'required');
 				$this->form_validation->set_rules('employee_status', 'Employee Status', 'required');
+				$this->form_validation->set_rules('employee_position', 'Employee Position', 'required');
 				if($data['npwp'] != $original_value['npwp']) {
 					   $is_unique =  '|is_unique[employee.npwp]';
 					} else {
@@ -519,6 +523,7 @@
 							'client_id' => $this->client_model->get_client(array('status' => 1)),
 							'projects_id' => $this->projects_model->get_projects(array('projects.status' => 1)),
 							'employee_status' => $this->employee_status_model->get_emp_status(array('status' => 'active')),
+							'employee_position' => $this->employee_position_model->get_emp_position(array('status' => 'active')),
 							'employee' => $this->employee_model->get_emp(array('employee.id' => $id))[0]
 							);
             $this->layout();
@@ -536,6 +541,7 @@
 								'bank_id' => $this->bank_model->get_bank(array('status' => 'active')),
 								'client_id' => $this->client_model->get_client(array('status' => 1)),
 								'projects_id' => $this->projects_model->get_projects(array('projects.status' => 1)),
+								'employee_position' => $this->employee_position_model->get_emp_position(array('status' => 'active')),
 								'employee_status' => $this->employee_status_model->get_emp_status(array('status' => 'active'))
 								);
 				$this->layout();
@@ -549,6 +555,7 @@
 				$this->form_validation->set_rules('hp', 'HP', 'required|numeric|is_unique[employee.hp]|is_unique[employee.hp2]');
 				$this->form_validation->set_rules('npwp', 'NPWP', 'required|numeric|is_unique[employee.npwp]');
 				$this->form_validation->set_rules('project_id', 'Client-Project', 'required');
+				$this->form_validation->set_rules('employee_position', 'Employee Position', 'required');
 				if($this->input->post('hp2')) {
 				   $this->form_validation->set_rules('hp2', 'HP2', 'numeric|is_unique[employee.hp]|is_unique[employee.hp2]');
 				}

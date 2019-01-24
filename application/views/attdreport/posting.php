@@ -89,31 +89,34 @@
 											</tr>
 										</thead>
 										<tbody>
-											<?php foreach($contents['attendant_period'] as $key => $value):
+											<?php foreach($contents['calculation'] as $key => $value):
+											/*
 												$internet_laptop = $contents['allowance']['internet_laptop']['nominal'] * $value['attend_total'];
 												$transport = $contents['allowance']['transport']['nominal'] * ($value['attend_total'] - $value['late_total']);
 												$meal_allowance = $contents['allowance']['meal_allowance']['nominal'] * $value['daily_report_total'];
 												$overtime_meal = $contents['allowance']['overtime_meal_allowance']['nominal'] * $value['overtime_total'];
 												$overtime_go_home = $contents['allowance']['overtime_go_home_allowance']['nominal'] * $value['overtime_go_home'];
 												$total = $internet_laptop + $transport + $meal_allowance + $overtime_meal + $overtime_go_home + $value['medical_total'];
+											*/
+												$total = $value['laptop_internet_total'] + $value['transport_total'] + $value['meal_allowance_total'] + $value['overtime_meal_allowance_total'] + $value['medical_total'];
 											?>
 											
 												<tr>
 													<td><?php echo $key+1 ; ?></td>
-													<td><?php echo $value['employee_data']['name'] ;?></td>
-													<td><?php echo $value['employee_data']['cuti_limit'] - $value['leaves_total'] ;?></td>
+													<td><?php echo $contents['attendant_period'][$key]['employee_data']['name'] ;?></td>
+													<td><?php echo $contents['attendant_period'][$key]['employee_data']['cuti_limit'] - $value['leaves_total'] ;?></td>
 													<td><?php echo $value['attend_total'] ;?></td>
 													<td><?php echo $value['daily_report_total'] ;?></td>
 													<td><?php echo $value['late_total'] ;?></td>
 													<td><?php echo $value['overtime_total'] ;?></td>
 													<td><?php echo $value['overtime_go_home'] ;?></td>
-													<td><?php echo number_format($internet_laptop) ;?></td>
-													<td><?php echo number_format($transport) ;?></td>
-													<td><?php echo number_format($meal_allowance) ;?></td>
-													<td><?php echo number_format($overtime_meal + $overtime_go_home) ;?></td>
+													<td><?php echo number_format($value['laptop_internet_total']) ;?></td>
+													<td><?php echo number_format($value['transport_total']) ;?></td>
+													<td><?php echo number_format($value['meal_allowance_total']) ;?></td>
+													<td><?php echo number_format($value['overtime_meal_allowance_total']) ;?></td>
 													<td><?php echo number_format($value['medical_total']) ;?></td>
 													<td><?php echo number_format($total);?></td>
-													<td><?php echo $value['employee_data']['bank_account'] ;?></td>
+													<td><?php echo $contents['attendant_period'][$key]['employee_data']['bank_account'] ;?></td>
 												</tr>
 											<?php endforeach;?>
 											
