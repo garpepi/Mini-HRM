@@ -74,7 +74,14 @@
 
 						$client_id = $this->projects_model->get_projects(array('projects.id' => $this->input->post('project')))[0]['client_id'];
 						$project_id = $this->input->post('project');
-						$detail_data = $this->attendancereport_model->get_in_out_report(array('attendance_detail.date >=' => $start_date, 'attendance_detail.date <=' => $end_date,'attendance_period.status'=>'posted','attendance_period.client_id' => $client_id,'attendance_period.project_id' => $project_id));
+						if($start_date < '2018-12-01')// backward compatibility
+						{
+							$detail_data = $this->attendancereport_model->get_in_out_report(array('attendance_detail.date >=' => $start_date, 'attendance_detail.date <=' => $end_date,'attendance_period.status'=>'posted','attendance_period.client_id' => $client_id));
+						}
+						else
+						{
+							$detail_data = $this->attendancereport_model->get_in_out_report(array('attendance_detail.date >=' => $start_date, 'attendance_detail.date <=' => $end_date,'attendance_period.status'=>'posted','attendance_period.client_id' => $client_id,'attendance_period.project_id' => $project_id));							
+						}
 						$holiday_raw = $this->holiday_model->get_holiday(array('status' => 'active', 'date >=' => $start_date, 'date <=' => $end_date) );
 						$holiday = array();
 						if(!empty($holiday_raw)){
