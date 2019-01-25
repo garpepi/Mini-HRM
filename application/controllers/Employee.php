@@ -383,7 +383,15 @@
 				if($this->form_validation->run()){
 					try{
 						$client_id = $this->projects_model->get_projects(array("projects.id" => $data['project_id'], "projects.status" => "Active"))[0]["client_id"];
-						$data['client_id'] = $client_id;
+						if(empty($client_id))
+						{
+							$data['client_id'] = 0;
+							$data['project_id'] = 0;
+						}
+						else
+						{
+							$data['client_id'] = $client_id;							
+						}
 						if(($original_value['client_id'] != 3) && ($original_value['client_id'] != 0) && ($data['client_id'] !== $original_value['client_id']) ){ //3 Adidata
 							// delete others Qatracker if exist
 							/*
@@ -570,6 +578,8 @@
 				$data = $this->input->post();
 				$data['birth_of_date'] = ($this->input->post('birth_of_date'))?db_date_only_format($this->input->post('birth_of_date')):null;
 				$data['join_date'] = ($this->input->post('join_date'))?db_date_only_format($this->input->post('join_date')):null;
+				$data['contract_start'] = ($this->input->post('contract_start'))?db_date_only_format($this->input->post('contract_start')):null;
+				$data['contract_end'] = ($this->input->post('contract_end'))?db_date_only_format($this->input->post('contract_end')):null;
 				$data['non_active_date'] = ($this->input->post('non_active_date'))?db_date_only_format($this->input->post('non_active_date')):null;
 				$data['user_c'] = $this->session->userdata('logged_in_data')['id'];
 				$applications = $data['applications'];
@@ -586,7 +596,15 @@
 							$qatrackerroute = '';
 						}*/
 						$client_id = $this->projects_model->get_projects(array("projects.id" => $data['project_id'], "projects.status" => "Active"))[0]["client_id"];
-						$data['client_id'] = $client_id;
+						if(empty($client_id))
+						{
+							$data['client_id'] = 0;
+							$data['project_id'] = 0;
+						}
+						else
+						{
+							$data['client_id'] = $client_id;							
+						}
 						$qatrackerroute = $data['client_id'];
 						$id = $this->employee_model->insert_emp($data);
 						// adding for application

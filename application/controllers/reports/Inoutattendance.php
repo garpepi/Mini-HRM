@@ -10,6 +10,7 @@
 			$this->load->model('holiday_model');
 			$this->load->model('attendance_timing_model');
 			$this->load->model('client_model');
+			$this->load->model('projects_model');
 		}
 
 		private function front_stuff(){
@@ -46,7 +47,8 @@
 								));
 			$this->contents = 'reports/inoutattendance';   // its your view name, change for as per requirement.
 			$this->data['contents'] = array(
-									'clients' => $this->client_model->get_client(array('status' => 1))
+									'clients' => $this->client_model->get_client(array('status' => 1)),
+									'projects' => $this->projects_model->get_projects(array('projects.status' => 1))
 								);
 		}
 
@@ -62,7 +64,7 @@
 			}else{
 				$data = $this->input->post();
 				$this->form_validation->set_rules('date-from', 'Request date Period', 'required');
-				$this->form_validation->set_rules('client', 'Client', 'required');
+				$this->form_validation->set_rules('project', 'Project', 'required');
 
 				try{
 					if($this->form_validation->run()){
@@ -70,7 +72,9 @@
 						$start_date = date('Y-m-d',strtotime('01-'.$site_date));
 						$end_date = date('Y-m-t',strtotime('01-'.$site_date));
 
-						$detail_data = $this->attendancereport_model->get_in_out_report(array('attendance_detail.date >=' => $start_date, 'attendance_detail.date <=' => $end_date,'attendance_period.status'=>'posted','attendance_period.client_id' => $this->input->post('client')));
+						$client_id = $this->projects_model->get_projects(array('projects.id' => $this->input->post('project')))[0]['client_id'];
+						$project_id = $this->input->post('project');
+						$detail_data = $this->attendancereport_model->get_in_out_report(array('attendance_detail.date >=' => $start_date, 'attendance_detail.date <=' => $end_date,'attendance_period.status'=>'posted','attendance_period.client_id' => $client_id,'attendance_period.project_id' => $project_id));
 						$holiday_raw = $this->holiday_model->get_holiday(array('status' => 'active', 'date >=' => $start_date, 'date <=' => $end_date) );
 						$holiday = array();
 						if(!empty($holiday_raw)){
@@ -154,10 +158,21 @@
 							$time_workday= array();
 							$periodd = array();
 							$countemp = 0;
-							$timing = $this->attendance_timing_model->get_timing(array('attendance_timing.client_id' => $this->input->post('client')));
+							if(date('Y-m-d',strtotime($start_date)) > date('Y-m-d',strtotime('30-11-2018')) ) // last big update
+							{
+								$timing = $this->attendance_timing_model->get_timing(array('attendance_timing.client_id'=> $client_id, 'attendance_timing.project_id'=> $project_id,'attendance_timing.status'=> 'active' ));								
+							}
+							else
+							{
+								$timing = $this->attendance_timing_model->get_timing(array('attendance_timing.client_id'=> $client_id,'attendance_timing.status'=> 'inactive'));	// backward compatibility
+							}
 							$totalworkinghhour = array();
 							$latehour = array();
-
+							
+							if(empty($timing))
+							{
+								throw new Exception("Attendance timing not set");
+							}
 							foreach($detail_data as $key => $value)
 							{
 								$period_data = $this->attendancereport_model->get_report_spesific($value['emp_id'],date('Y-m',strtotime('01-'.$site_date)));

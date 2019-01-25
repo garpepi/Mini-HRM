@@ -120,11 +120,11 @@ class Attendance_model extends CI_Model {
 		return TRUE ;
     }
 
-	public function post_attendance_period($period = '', $period_report = array() , $date,$client_id)
+	public function post_attendance_period($period = '', $period_report = array() , $date,$client_id, $project_id)
     {
 		$this->db->trans_begin();
 
-		$this->db->where(array('period' => $period, 'client_id' => $client_id));
+		$this->db->where(array('period' => $period, 'client_id' => $client_id, 'project_id' => $project_id));
         $this->db->update('attendance_period', array('status' => 'posted', 'posted_date' =>$date));
 
 		$this->db->insert_batch('attendance_report',$period_report);

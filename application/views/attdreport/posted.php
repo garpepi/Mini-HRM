@@ -51,12 +51,12 @@
 								</div>
 								<div class="form-group">
 									<label>Client</label>
-									<select name='client' id='client' class="form-control" required>
-									<option value='' selected>Choose Client</option>
+									<select name='project' id='project' class="form-control" required>
+									<option value='' selected>Choose Client - Project</option>
 									<?php 
-										foreach($contents['clients'] as $key => $value){
+										foreach($contents['projects'] as $key => $value){
 											?>
-											<option value='<?php echo $value['id'];?>'><?php echo $value['name'];?></option>
+											<option value='<?php echo $value['id'];?>'><?php echo $value['name'].' - '.$value['client_name'];?></option>
 											<?php
 										}
 									?>

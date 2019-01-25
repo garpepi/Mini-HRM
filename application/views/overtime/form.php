@@ -71,6 +71,7 @@
 									<textarea required name='reason' class="form-control" rows="3" <?php echo ($this->uri->segment(2) != 'add' && $this->uri->segment(2) == 'view') ? 'disabled' : '' ;?>><?php echo ($this->uri->segment(2) != 'add' && repopulate_form('reason') == '' ? $contents['overtime']['reason'] : repopulate_form('reason')) ; ?></textarea>
 
 								</div>
+								<?php if($this->uri->segment(2) != 'add' && isset($contents['overtime']['time_go_home']) && $contents['overtime']['time_go_home'] != NULL) :?>
 								<div class="form-group">
 									<label>Time go Home</label>
 									<div class='input-group time' >
@@ -82,6 +83,30 @@
 										</span>
 									</div>
 								</div>
+								<?php else:?>
+								<div class="form-group">
+									<label>Start Overtime</label>
+									<div class='input-group datetimes' >
+										<input onkeydown="return false" name='start_in' type='text' class="form-control"
+										value="<?php echo ($this->uri->segment(2) != 'add' && repopulate_form('start_in') == '' ? $contents['overtime']['start_in'] : repopulate_form('start_in')) ; ?>"
+									required <?php echo ($this->uri->segment(2) != 'add' && $this->uri->segment(2) == 'view') ? 'disabled' : '' ;?> >
+										<span class="input-group-addon">
+											<span class="glyphicon glyphicon-time"></span>
+										</span>
+									</div>
+								</div>
+								<div class="form-group">
+									<label>End Overtime</label>
+									<div class='input-group datetimes' >
+										<input onkeydown="return false" name='end_out' type='text' class="form-control"
+										value="<?php echo ($this->uri->segment(2) != 'add' && repopulate_form('end_out') == '' ? $contents['overtime']['end_out'] : repopulate_form('end_out')) ; ?>"
+									required <?php echo ($this->uri->segment(2) != 'add' && $this->uri->segment(2) == 'view') ? 'disabled' : '' ;?> >
+										<span class="input-group-addon">
+											<span class="glyphicon glyphicon-time"></span>
+										</span>
+									</div>
+								</div>
+								<?php endif;?>
 
 						</div>
 						<!-- /.col-lg-6 (nested) -->

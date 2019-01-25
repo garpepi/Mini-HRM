@@ -25,7 +25,7 @@
 							'vendor/datatables-responsive/dataTables.responsive.js',
 							'vendor/moment/moment.min.js',
 							'vendor/bootstrap-datetimepicker/bootstrap-datetimepicker.js',
-							'page/js/division.js'
+							'page/js/client.js'
 						);
 			$this->contents = 'contents/client/index';   // its your view name, change for as per requirement.
 			$this->data['contents'] = array(
@@ -133,11 +133,6 @@
 			if ($this->input->server('REQUEST_METHOD') == 'POST'){
 
 				$this->form_validation->set_rules('name', 'Name', 'required|is_unique[client.name]');
-				$this->form_validation->set_rules('meal_allowance', 'Meal Allowance', 'required|numeric');
-				$this->form_validation->set_rules('transport', 'Transport', 'required|numeric');
-				$this->form_validation->set_rules('internet_laptop', 'Internet + Laptop', 'required|numeric');
-				$this->form_validation->set_rules('overtime_meal_allowance', 'Overtime Allowance', 'required|numeric');
-				$this->form_validation->set_rules('overtime_go_home_allowance', 'Overtime > 12 AM', 'required|numeric');
 
 				$data = $this->input->post();
 

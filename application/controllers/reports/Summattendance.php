@@ -4,7 +4,8 @@
 		public function __construct(){
 			parent::__construct();
 			$this->load->model('attendancereport_model');
-			$this->load->model('client_model');			
+			$this->load->model('client_model');	
+			$this->load->model('projects_model');				
 		}
 		
 		private function front_stuff(){
@@ -41,7 +42,8 @@
 								));
 			$this->contents = 'reports/sumattendance';   // its your view name, change for as per requirement.
 			$this->data['contents'] = array(
-									'clients' => $this->client_model->get_client(array('status' => 1))
+									'clients' => $this->client_model->get_client(array('status' => 1)),
+									'projects' => $this->projects_model->get_projects(array('projects.status' => 1))
 								);
 		}
 		
@@ -58,7 +60,7 @@
 				$data = $this->input->post();
 				$this->form_validation->set_rules('date-from', 'Request date from', 'required');
 				$this->form_validation->set_rules('date-to', 'Request date to', 'required');
-				$this->form_validation->set_rules('client', 'Client', 'required');
+				$this->form_validation->set_rules('project', 'Projetcs', 'required');
 				
 				try{
 					if($this->form_validation->run()){
@@ -66,11 +68,13 @@
 						$data['date-from'] = date('Y-m-d',strtotime('01-'.$site_date) );
 						$site_date = '01-'.str_replace('/', '-', $this->input->post('date-to'));
 						$data['date-to'] = date('Y-m-d', strtotime("+1 months",strtotime($site_date)));
-
-						$sum_data = $this->attendancereport_model->get_report($data['date-from'],$data['date-to'],$this->input->post('client'));
-						//echo '<pre>';print_r($sum_data);exit();
+						
+						$client_id = $this->projects_model->get_projects(array('projects.id' => $this->input->post('project')))[0]['client_id'];
+						$project_id = $this->input->post('project');
+						$sum_data = $this->attendancereport_model->get_report($data['date-from'],$data['date-to'],$client_id,$project_id);
+						//echo '<pre>';print_r($this->db->last_query());exit();
 						if(empty($sum_data)){
-							throw new Exception('Error on get data');	
+							throw new Exception('Data empty!');	
 						}else{
 							$show_data=array();
 							/*

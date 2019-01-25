@@ -6,10 +6,10 @@ class Raw_attendance_model extends CI_Model {
         parent::__construct();
     }
 
-	public function get_ra($finger_id= 0,$period = '',$client_id = '')
+	public function get_ra($finger_id= 0,$period = '',$client_id = '', $project_id = '')
     {
 		$this->load->model('attendance_timing_model');
-		$timing = $this->attendance_timing_model->get_timing(array('client_id' => $client_id));
+		$timing = $this->attendance_timing_model->get_timing(array('client_id' => $client_id,'project_id' => $project_id));
 		$period_start = $period.'-01';
 		$last_date = date('t',strtotime($period_start));
 		$result = array();
