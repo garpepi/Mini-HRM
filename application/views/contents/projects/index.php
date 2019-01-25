@@ -89,7 +89,7 @@
 						<div class="col-lg-12">
 							<div class="panel panel-default">
 								<div class="panel-heading">
-										New Projects
+									<?php echo ($this->uri->segment(2) == 'edit' ? 'Edit Projects' : 'New Projects');?>
 								</div>
 								<div class="panel-body">				
 									<form role="form" method='post' action='<?php echo base_url().'projects/'.($this->uri->segment(2) == 'edit' ? 'edit/'.$contents['data']['id'] : 'add');?>'>
@@ -99,12 +99,23 @@
 													<label>Client</label>
 													<select name='client_id' id='client' class="form-control" required <?php echo ($this->uri->segment(2) != 'add' && $this->uri->segment(2) == 'view') ? 'disabled' : '' ;?>>
 														<?php foreach($contents['client'] as $key=>$value ):?>
-															<?php if(repopulate_form('client_id') != '' && repopulate_form('client_id') == $value['id']) :?>
-																		<option value='<?php echo $value['id'];?>' selected><?php echo $value['name'];?></option>
-																	<?php else :?>
-																		<option value='<?php echo $value['id'];?>'><?php echo $value['name'];?></option>
-															<?php endif ;?>
-														<?php endforeach;?>
+															<?php
+															if($this->uri->segment(2) == 'edit')
+															{
+																if(!empty($contents['data']['client_id']) && $contents['data']['client_id'] == $value['id']) :?>
+																			<option value='<?php echo $value['id'];?>' selected><?php echo $value['name'];?></option>
+																		<?php else :?>
+																			<option value='<?php echo $value['id'];?>'><?php echo $value['name'];?></option>
+																<?php endif ;	
+															}else
+															{
+																if(repopulate_form('client_id') != '' && repopulate_form('client_id') == $value['id']) :?>
+																			<option value='<?php echo $value['id'];?>' selected><?php echo $value['name'];?></option>
+																		<?php else :?>
+																			<option value='<?php echo $value['id'];?>'><?php echo $value['name'];?></option>
+																<?php endif ;																
+															}
+														endforeach;?>
 													</select>
 												</div>
 												<div class="form-group">
