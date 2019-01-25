@@ -29,7 +29,7 @@ class Allowance_model extends CI_Model {
 		$this->db->from('allowance');
 		$this->db->join('client', 'client.id = allowance.client_id');
 		$this->db->join('projects', 'projects.id = allowance.project_id');
-		$this->db->join('employee_position', 'employee_position.id = allowance.employee_position_id');
+		$this->db->join('employee_position', 'employee_position.id = allowance.employee_position_id','left');
         $this->db->where($where);
 		if(!empty($group_by))
 		{
