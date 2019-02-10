@@ -23,20 +23,16 @@
 						<!--
 						<form role="form" method='post' action='<?php echo base_url().'allowance/set'.($this->uri->segment(2) == 'edit' ? 'edit/'.$contents['data']['id'] : 'add');?>'>
 						-->
-						<form role="form" method='post' action='<?php echo base_url().'allowance/set';?>'>
+						<form role="form" method='post' action='<?php echo base_url().'allowance/set/'.$contents['data']['project'].'/'.$contents['data']['position'];?>'>
 							<div class="col-lg-12">
 								<div class="col-lg-6">
 									<div class="form-group">
 										<label>Client - Project</label>
-										<select name='project_id' id='project_id' class="form-control" required <?php echo ($this->uri->segment(2) != 'add' && $this->uri->segment(2) == 'view') ? 'disabled' : '' ;?>>
-											<?php foreach($contents['projects'] as $key=>$value ):?>
-												<?php if(repopulate_form('project_id') != '' && repopulate_form('project_id') == $value['id']) :?>
-															<option value='<?php echo $value['id'];?>' selected><?php echo $value['client_name'].' - '.$value['name'];?></option>
-														<?php else :?>
-															<option value='<?php echo $value['id'];?>'><?php echo $value['client_name'].' - '.$value['name'];?></option>
-												<?php endif ;?>
-											<?php endforeach;?>
-										</select>
+										<input class="form-control" value = '<?php echo $contents['projects']['client_name'].' - '.$contents['projects']['name'];?>' disabled>
+									</div>
+									<div class="form-group">
+										<label>Positions</label>
+										<input class="form-control" value = '<?php echo $contents['positions'][0]['name'];?>' disabled>
 									</div>
 								</div>
 								<div class="col-lg-6">

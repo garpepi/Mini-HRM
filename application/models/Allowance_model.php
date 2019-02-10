@@ -25,10 +25,11 @@ class Allowance_model extends CI_Model {
 	
 	public function get_show_allowance($where = array(),$group_by = '',$distinct = '')
     {    
-        $this->db->select('allowance.*,client.name as client_name, projects.name as project_name');
+        $this->db->select('allowance.*,client.name as client_name, projects.name as project_name, employee_position.name as employee_position');
 		$this->db->from('allowance');
 		$this->db->join('client', 'client.id = allowance.client_id');
 		$this->db->join('projects', 'projects.id = allowance.project_id');
+		$this->db->join('employee_position', 'employee_position.id = allowance.employee_position_id','left');
         $this->db->where($where);
 		if(!empty($group_by))
 		{
@@ -56,17 +57,17 @@ class Allowance_model extends CI_Model {
 		$insetData = array();
 		if(isset($data['meal_allowance']))
 		{
-			$insetData[] = array('project_id' => $data['project_id'], 'client_id' => $data['client'],'name' => 'meal_allowance', 'showed_name'=>'Meal Allowance', 'nominal' => $data['meal_allowance'], 'user_c' => $data['user_c']);
+			$insetData[] = array('project_id' => $data['project_id'], 'client_id' => $data['client'],'employee_position_id' => $data['employee_position_id'],'name' => 'meal_allowance', 'showed_name'=>'Meal Allowance', 'nominal' => $data['meal_allowance'], 'user_c' => $data['user_c']);
 		}
 		
 		if(isset($data['transport']))
 		{
-			$insetData[] = array('project_id' => $data['project_id'], 'client_id' => $data['client'],'name' => 'transport', 'showed_name'=>'Transport', 'nominal' => $data['transport'], 'user_c' => $data['user_c']);
+			$insetData[] = array('project_id' => $data['project_id'], 'client_id' => $data['client'],'employee_position_id' => $data['employee_position_id'],'name' => 'transport', 'showed_name'=>'Transport', 'nominal' => $data['transport'], 'user_c' => $data['user_c']);
 		}
 		
 		if(isset($data['internet_laptop']))
 		{
-			$insetData[] = array('project_id' => $data['project_id'], 'client_id' => $data['client'],'name' => 'internet_laptop', 'showed_name'=>'Internet & Laptop', 'nominal' => $data['internet_laptop'], 'user_c' => $data['user_c']);
+			$insetData[] = array('project_id' => $data['project_id'], 'client_id' => $data['client'],'employee_position_id' => $data['employee_position_id'],'name' => 'internet_laptop', 'showed_name'=>'Internet & Laptop', 'nominal' => $data['internet_laptop'], 'user_c' => $data['user_c']);
 		}
 		
 		if(isset($data['overtime']))
@@ -74,7 +75,7 @@ class Allowance_model extends CI_Model {
 			foreach($data['overtime'] as $key => $value)
 			{
 				$param = $key +1;
-				$insetData[] = array('project_id' => $data['project_id'], 'client_id' => $data['client'],'name' => 'overtime_'.$param.'h', 'showed_name'=>'Overtime '.$param.' Hour', 'nominal' => $value, 'user_c' => $data['user_c']);
+				$insetData[] = array('project_id' => $data['project_id'], 'client_id' => $data['client'],'employee_position_id' => $data['employee_position_id'],'name' => 'overtime_'.$param.'h', 'showed_name'=>'Overtime '.$param.' Hour', 'nominal' => $value, 'user_c' => $data['user_c']);
 			}
 		}
 		
@@ -83,7 +84,7 @@ class Allowance_model extends CI_Model {
 			foreach($data['we_overtime_'] as $key => $value)
 			{
 				$param = $key +1;
-				$insetData[] = array('project_id' => $data['project_id'], 'client_id' => $data['client'],'name' => 'we_overtime_'.$param.'h', 'showed_name'=>'Weekend Overtime '.$param.' Hour', 'nominal' => $value, 'user_c' => $data['user_c']);
+				$insetData[] = array('project_id' => $data['project_id'], 'client_id' => $data['client'],'employee_position_id' => $data['employee_position_id'],'name' => 'we_overtime_'.$param.'h', 'showed_name'=>'Weekend Overtime '.$param.' Hour', 'nominal' => $value, 'user_c' => $data['user_c']);
 			}
 		}
 		return $this->db->insert_batch('allowance',$insetData);

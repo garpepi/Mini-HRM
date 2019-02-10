@@ -125,6 +125,27 @@
 									</select>
 								</div>
 								<div class="form-group">
+									<label>Employee Position</label>
+									<select name='employee_position' id='employee_position' class="form-control" required <?php echo ($this->uri->segment(2) != 'add' && $this->uri->segment(2) == 'view') ? 'disabled' : '' ;?>>
+									<option value='' > Select Position</option>
+										<?php foreach($contents['employee_position'] as $key=>$value ):?>
+											<?php if($this->uri->segment(2) != 'add' ) : // edit/view
+													if((repopulate_form('employee_position') != '' && repopulate_form('employee_position') == $value['id'] ) || (repopulate_form('employee_position') == '' && $contents['employee']['employee_position'] == $value['id']) ) :?>
+														<option value='<?php echo $value['id'];?>' selected><?php echo $value['name'];?></option>
+													<?php else  :?>
+														<option value='<?php echo $value['id'];?>'><?php echo $value['name'];?></option>
+													<?php endif ;?>
+											<?php else : // normal
+													if(repopulate_form('employee_position') != '' && repopulate_form('employee_position') == $value['id']) :?>
+														<option value='<?php echo $value['id'];?>' selected><?php echo $value['name'];?></option>
+													<?php else :?>
+														<option value='<?php echo $value['id'];?>'><?php echo $value['name'];?></option>
+													<?php endif ;?>
+											<?php endif ;?>
+										<?php endforeach;?>
+									</select>
+								</div>
+								<div class="form-group">
 									<label>Hp</label>
 									<input type=text name='hp' id='hp' class="form-control" onkeypress="return isNumberKey(event)"
 									value="<?php echo ($this->uri->segment(2) != 'add' && repopulate_form('hp') == '' ? $contents['employee']['hp'] : repopulate_form('hp')) ; ?>"

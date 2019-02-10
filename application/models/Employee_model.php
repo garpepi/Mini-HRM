@@ -16,6 +16,7 @@ class Employee_model extends CI_Model {
 			$this->db->join('client', 'client.id = employee.client_id','left');
     		$this->db->join('projects', 'projects.id = employee.project_id','left');
 			$this->db->join('employee_status', 'employee_status.id = employee.employee_status','left');
+			$this->db->join('employee_position', 'employee_position.id = employee.employee_position','left');
     		$this->db->where(array('medical.status' => 'active','cuti.status' => 'active'));
     		$this->db->where($where);
     		if(!empty($where_not_in)){

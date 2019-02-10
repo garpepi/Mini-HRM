@@ -242,12 +242,15 @@
 						);
 			}
 			//Get employee per this period
-			$client_id = $this->employee_model->get_emp(array('employee.id' => $employee_id))[0]['client_id'];
-			$project_id = $this->employee_model->get_emp(array('employee.id' => $employee_id))[0]['project_id'];
+			$employees_data = $this->employee_model->get_emp(array('employee.id' => $employee_id))[0];
+			$client_id = $employees_data['client_id'];
+			$project_id = $employees_data['project_id'];
+			$employee_position_id = $employees_data['employee_position'];
 			$period_data = array(
 						'emp_id' => $employee_id,
 						'client_id' => $client_id,
 						'project_id' => $project_id,
+						'employee_position_id' => $employee_position_id,
 						'period' => $period,
 						'leaves_total' => $day_off_total,
 						'attend_total' => $attend_total,
@@ -310,6 +313,7 @@
 			}else{
 				try{
 					$period_data = $this->attendance_model->get_attd_period(array('attendance_period.id' => $attend_period_id));
+					$projects = $this->projects_model->get_projects(array("projects.id" => $period_data[0]['project_id'], "projects.status" => "Active"));
 					$post_status = $period_data[0]['status'];
 					$emp_id = $period_data[0]['emp_id'];
 					$period = $period_data[0]['period'];
@@ -364,10 +368,13 @@
 										'user_m' => $this->session->userdata('logged_in_data')['id']
 									);
 					}
+					
 					// QA Leaves Calculation START
 					// check employee contract ended
 					$empt_data = $this->employee_model->get_emp(array('employee.id' => $emp_id,'employee.status' => 'active'));
-					if($empt_data[0]['employee_status'] != 1 && $empt_data[0]['employee_status'] != 4) // Contract and Permanent QA
+					
+					// GET LAST LEAVES USING QAC
+					if($empt_data[0]['employee_status'] != 1 && $empt_data[0]['employee_status'] != 4) // Contract and Probation
 					{
 						if(( date('Y-m', strtotime($period)) >= date('Y-m', strtotime($empt_data[0]['contract_start'])) ) &&  ( date('Y-m', strtotime($period)) <= date('Y-m', strtotime($empt_data[0]['contract_end'])) ) )
 						{
@@ -377,7 +384,7 @@
 							//out of range from contract
 							throw new Exception('This Employee\'s Contract has been deprecated. Please renew the contract first!');
 						}
-					}elseif($empt_data[0]['employee_status'] == 4){
+					}elseif($empt_data[0]['employee_status'] == 4){ // Permanet QA
 
 						// Permanent QA
 						if( ( date('Y-m', strtotime($period)) >= date('Y-m', strtotime('-1 year',strtotime(date('Y').'-05-01'))) )  &&  ( date('Y-m', strtotime($period)) <= date('Y-m', strtotime(date('Y').'-05-01')) ) )
@@ -394,7 +401,7 @@
 								{
 									$qac = $this->leaves_qac_model->get_qac(array('period' => date('Y-m', strtotime($period.' -1 months')), 'emp_id' => $emp_id));
 								}else{
-									throw new Exception('Error On Logical, contact admin!');
+									throw new Exception('Error On Logical, contact admin! EQAC-1');
 								}
 							}
 
@@ -405,12 +412,15 @@
 								{
 									$qac = $this->leaves_qac_model->get_qac(array('period' => date('Y-m', strtotime($period.' -1 months')), 'emp_id' => $emp_id));
 								}else{
-									throw new Exception('Error On Logical, contact admin!');
+									throw new Exception('Error On Logical, contact admin! EQAC-2');
 								}
 							}
 
 						}
 					}
+						
+					
+					
 
 					$qac_status = $this->leaves_qac_model->get_qac(array('period' => $period, 'emp_id' => $emp_id));
 					$last_leaves = (!empty($qac) ? $qac[0]['leaves_remain'] : 0 );
@@ -419,24 +429,49 @@
 					if(!empty($qac_status))
 					{
 						//update
-						$leaves_remains = array(
-										// OLD Formula
-										//'leaves_remain' => ($overtime_total-$day_off_total+$default_leaves)+($last_leaves),
-										// NEW Formula 12/17/2018
-										'leaves_remain' => ($day_off_total+$default_leaves)+($last_leaves),
-										'user_m' => $this->session->userdata('logged_in_data')['id']
-									);
+						// Check if leaves_subs on or off
+						if($projects[0]['leaves_sub'] == 1) // IF ON USE OLD METHOD
+						{
+							$leaves_remains = array(
+											// OLD Formula
+											'leaves_remain' => ($overtime_total-$day_off_total+$default_leaves)+($last_leaves),
+											'user_m' => $this->session->userdata('logged_in_data')['id']
+										);
+						}
+						else
+						{
+							$leaves_remains = array(
+											// OLD Formula
+											//'leaves_remain' => ($overtime_total-$day_off_total+$default_leaves)+($last_leaves),
+											// NEW Formula 12/17/2018
+											'leaves_remain' => ($default_leaves - $day_off_total)+($last_leaves),
+											'user_m' => $this->session->userdata('logged_in_data')['id']
+										);
+						}
 						$this->leaves_qac_model->update_qac_leaves($emp_id,$period,$leaves_remains);
 					}else{
 						//insert
-						$leaves_remains = array(
-										'emp_id' => $emp_id,
-										'period' => $period,
-										// OLD Formula
-										//'leaves_remain' => ($overtime_total-$day_off_total+$default_leaves)+($last_leaves)
-										// NEW Formula 12/17/2018
-										'leaves_remain' => ($day_off_total+$default_leaves)+($last_leaves)
-									);
+						// Check if leaves_subs on or off
+						if($projects[0]['leaves_sub'] == 1)// IF ON USE OLD METHOD
+						{
+							$leaves_remains = array(
+											'emp_id' => $emp_id,
+											'period' => $period,
+											// OLD Formula
+											'leaves_remain' => ($overtime_total-$day_off_total+$default_leaves)+($last_leaves)
+										);
+						}
+						else
+						{
+							$leaves_remains = array(
+											'emp_id' => $emp_id,
+											'period' => $period,
+											// OLD Formula
+											//'leaves_remain' => ($overtime_total-$day_off_total+$default_leaves)+($last_leaves)
+											// NEW Formula 12/17/2018
+											'leaves_remain' => ($default_leaves - $day_off_total)+($last_leaves)
+										);							
+						}
 						$this->leaves_qac_model->insert_qac_leaves($leaves_remains);
 					}
 					// QA Leaves Calculation END

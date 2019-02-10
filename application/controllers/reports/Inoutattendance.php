@@ -71,10 +71,23 @@
 						$site_date = str_replace('/', '-', $this->input->post('date-from'));
 						$start_date = date('Y-m-d',strtotime('01-'.$site_date));
 						$end_date = date('Y-m-t',strtotime('01-'.$site_date));
-
-						$client_id = $this->projects_model->get_projects(array('projects.id' => $this->input->post('project')))[0]['client_id'];
+						
+						$clients = $this->projects_model->get_projects(array('projects.id' => $this->input->post('project')))[0];
+						$client_id = $clients['client_id'];
 						$project_id = $this->input->post('project');
-						$detail_data = $this->attendancereport_model->get_in_out_report(array('attendance_detail.date >=' => $start_date, 'attendance_detail.date <=' => $end_date,'attendance_period.status'=>'posted','attendance_period.client_id' => $client_id,'attendance_period.project_id' => $project_id));
+						$client_name = '';
+						$project_name = '';
+						if($start_date < '2018-12-01')// backward compatibility
+						{
+							$detail_data = $this->attendancereport_model->get_in_out_report(array('attendance_detail.date >=' => $start_date, 'attendance_detail.date <=' => $end_date,'attendance_period.status'=>'posted','attendance_period.client_id' => $client_id));
+							$client_name = $clients['client_name'];
+						}
+						else
+						{
+							$detail_data = $this->attendancereport_model->get_in_out_report(array('attendance_detail.date >=' => $start_date, 'attendance_detail.date <=' => $end_date,'attendance_period.status'=>'posted','attendance_period.client_id' => $client_id,'attendance_period.project_id' => $project_id));
+							$client_name = $clients['client_name'];
+							$project_name = $clients['name'];				
+						}
 						$holiday_raw = $this->holiday_model->get_holiday(array('status' => 'active', 'date >=' => $start_date, 'date <=' => $end_date) );
 						$holiday = array();
 						if(!empty($holiday_raw)){
@@ -342,8 +355,8 @@
 								array_push($show_data,$lates[$empid]);
 								array_push($show_data,$time_workday[$empid]);
 							}
-							//echo '<pre>';print_r($show_data);exit();
-							$this->generate_report($show_data,$start_date,$countemp);
+							//echo '<pre>';print_r($client_name);exit();
+							$this->generate_report($show_data,$start_date,$countemp,$client_name,$project_name);
 						}
 					}else{
 						throw new Exception(validation_errors());
@@ -359,10 +372,29 @@
 			}
         }
 
-		private function generate_report($data_gen,$period,$count){
-			$title[] = array(
-						'In-Out Attendace ('.date('Y-m',strtotime($period)).')'
+		private function generate_report($data_gen,$period,$count, $client_name = '', $project_name = ''){
+			if(!empty($client_name) || !empty($project_name))
+			{
+				if(!empty($client_name) && empty($project_name) )
+				{
+					$title[] = array(
+						'In-Out Attendace ('.date('Y-m',strtotime($period)).') '.$client_name
 					);
+				}
+				else
+				{
+					$title[] = array(
+						'In-Out Attendace ('.date('Y-m',strtotime($period)).') '.$project_name.' - '.$client_name
+					);					
+				}
+			}
+			else
+			{
+				$title[] = array(
+					'In-Out Attendace ('.date('Y-m',strtotime($period)).')'
+				);
+			}
+			
 			$header1[] = array(
 						'No',
 						'Name',
@@ -394,8 +426,8 @@
 			$this->excel->setActiveSheetIndex(0);
 			$this->excel->getActiveSheet()->setTitle($period); // naming sheet
 
-
-			$filename='In-Out Attendace '.date('Y-m',strtotime($period)).'.xls'; //save our workbook as this file name
+			//$filename='In-Out Attendace '.date('Y-m',strtotime($period)).'.xls'; //save our workbook as this file name
+			$filename = $title[0][0].'.xls';
 			header('Content-Type: application/vnd.ms-excel'); //mime type
 			header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
 			header('Cache-Control: max-age=0'); //no cache
