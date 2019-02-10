@@ -71,12 +71,16 @@
 						
 						$client_id = $this->projects_model->get_projects(array('projects.id' => $this->input->post('project')))[0]['client_id'];
 						$project_id = $this->input->post('project');
+
 						$sum_data = $this->attendancereport_model->get_report($data['date-from'],$data['date-to'],$client_id,$project_id);
+						
 						//echo '<pre>';print_r($this->db->last_query());exit();
 						if(empty($sum_data)){
 							throw new Exception('Data empty!');	
 						}else{
 							$show_data=array();
+							$project_name = $sum_data[0]['project_name'];
+							$client_name = $sum_data[0]['client_name'];
 							/*
 							foreach($sum_data as $key=>$value){
 								$show_data[$value['emp_id']]=array(
@@ -123,7 +127,7 @@
 								);
 							}
 						//	echo '<pre>';print_r($show_data);exit();
-							$this->generate_report($show_data,$data['date-from'] . ' - ' .$data['date-to']);
+							$this->generate_report($show_data,$data['date-from'] . ' - ' .$data['date-to'],$client_name,$project_name);
 						}	
 					}else{
 						throw new Exception(validation_errors());
@@ -138,10 +142,20 @@
 				//redirect('/reports/summattendance');
 			}
         }
-		private function generate_report($data_gen,$period){
-			$title[] = array(
-						'Summary Attendace ('.$period.')'
+		private function generate_report($data_gen,$period,$client_name = '',$project_name=''){
+			if(!empty($client_name) && !empty($project_name))
+			{
+				$title[] = array(
+						'Summary Attendance ('.$period.') '.$project_name.' - '.$client_name
 					);
+			}
+			else
+			{
+				$title[] = array(
+						'Summary Attendance ('.$period.')'
+					);
+			}
+			
 			$header[] = array(
 						'No',
 						'Name',
@@ -162,7 +176,8 @@
 			$this->excel->getActiveSheet()->setTitle($period); // naming sheet
 			
 			
-			$filename='Summary Attendace '.$period.'.xls'; //save our workbook as this file name
+			//$filename='Summary Attendance '.$period.'.xls'; //save our workbook as this file name
+			$filename=$title[0][0].'.xls';
 			header('Content-Type: application/vnd.ms-excel'); //mime type
 			header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
 			header('Cache-Control: max-age=0'); //no cache
