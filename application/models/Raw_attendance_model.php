@@ -19,7 +19,7 @@ class Raw_attendance_model extends CI_Model {
 			$period_loop = $period.'-'.sprintf("%02d", $i);
 			$this->db->select('*');
 			$this->db->where(array('finger_id' => $finger_id, 'date' => $period_loop));
-			$this->db->order_by('date ASC', 'tap_time ASC');
+			$this->db->order_by('date ASC ,tap_time ASC');
 			$query = $this->db->get('raw_attendance');
 			$return = $query->result_array();
 
