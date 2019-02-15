@@ -19,6 +19,7 @@ class Raw_attendance_model extends CI_Model {
 			$period_loop = $period.'-'.sprintf("%02d", $i);
 			$this->db->select('*');
 			$this->db->where(array('finger_id' => $finger_id, 'date' => $period_loop));
+			$this->db->order_by('date ASC', 'tap_time ASC');
 			$query = $this->db->get('raw_attendance');
 			$return = $query->result_array();
 
@@ -43,13 +44,13 @@ class Raw_attendance_model extends CI_Model {
 						$result[$period_loop]['go_home'] = '';
 					}
 				}else{
-					if($first > '05:59' && $first < $timing['comes']['time']){
+					if($first > '05:59' && $first <= $timing['comes']['time']){
 						$result[$period_loop]['come_in'] = $first;
 					}else{
 						$result[$period_loop]['come_in'] = '';
 					}
 
-					if($last > $timing['go_home']['time'] && $last < '23:59'){
+					if($last >= $timing['go_home']['time'] && $last < '23:59'){
 						$result[$period_loop]['go_home'] = $last;
 					}else{
 						$result[$period_loop]['go_home'] = '';
@@ -64,9 +65,16 @@ class Raw_attendance_model extends CI_Model {
         return $result;
     }
 
-	public function inser_ra($data = array())
+	public function inser_ra($datas = array())
     {
-        return $this->db->insert_batch('raw_attendance', $data);
+		$this->db->trans_start();
+		foreach($datas as $data )
+		{
+			$this->db->insert('raw_attendance',$data);
+			//echo $this->db->last_query().'<br>';
+		}
+		return $this->db->trans_complete();
+        //return $this->db->insert_batch('raw_attendance', $data);
     }
 
 
