@@ -14,6 +14,7 @@
 			$this->load->model('holiday_model');
 			$this->load->model('attendance_timing_model');
 			$this->load->model('leaves_qac_model');
+			$this->load->model('projects_model');
 
 		}
 
