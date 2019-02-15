@@ -299,7 +299,7 @@
 					}
 				}
 				$this->data['contents'] = array(
-									'employee' => $this->employee_model->get_emp(array('employee.status' => 'active', 'employee.employee_status >' => 1)),
+									'employee' => $this->employee_model->get_emp(array('employee.status' => 'active', 'employee.employee_status >' => 1),array(),'',array('employee.name','asc')),
 									'employee_selected' => $this->employee_model->get_emp(array('employee.id' => $attendance_period[0]['emp_id'],'employee.status' => 'active')),
 									'medical' => $this->medical_model->get_medical_reimbursement(array('emp_id' => $attendance_period[0]['emp_id'],'date >=' => $attendance_period[0]['period'].'-01', 'date <=' => date('Y-m-t', strtotime($attendance_period[0]['period'].'-01')) )),
 									'overtime' => $this->overtime_model->get_overtime(array('emp_id' => $attendance_period[0]['emp_id'],'date >=' => $attendance_period[0]['period'].'-01', 'date <=' => date('Y-m-t', strtotime($attendance_period[0]['period'].'-01')) ,'overtime.status' => 'active')),
