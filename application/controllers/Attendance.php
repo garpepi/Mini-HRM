@@ -66,7 +66,6 @@
 				$this->form_validation->set_rules('emp_id', 'Employee Name', 'required');
 				$this->form_validation->set_rules('month', 'Month', 'required|numeric');
 				$this->form_validation->set_rules('year', 'Year', 'required|numeric');
-				//$timing = $this->attendance_timing_model->get_timing();
 				try{
 						if($this->form_validation->run()){
 							$employee_data = $this->employee_model->get_emp(array('employee.id' => $this->input->post('emp_id')))[0];
@@ -79,8 +78,15 @@
 							$attended_period = $this->attendance_model->get_attd_period(array('attendance_period.emp_id' => $employee_id , 'attendance_period.period' => $period));
 							if(empty($attended_period) ){ // data not exist yet
 
+								if($employee_data['employee_status'] != 1 && $employee_data['employee_status'] != 4) // Contract and Probation
+								{
+									if( !(( date('Y-m', strtotime($period)) >= date('Y-m', strtotime($employee_data['contract_start'])) ) &&  ( date('Y-m', strtotime($period)) <= date('Y-m', strtotime($employee_data['contract_end'])) )) )
+									{
+										//out of range from contract
+										throw new Exception('This Employee\'s Contract has been deprecated or has not been started on this period. Please renew / recheck the contract first!');
+									}
+								}
 								$return_id = $this->input_firsttime($finger_id,$period,$employee_id,$client_id,$project_id);
-								//$return_id = $this->attendance_model->insert_attd($period_data,$detail_data);
 
 								redirect('/attendance/edit/'.$return_id);
 							}else{
