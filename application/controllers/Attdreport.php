@@ -388,6 +388,7 @@
 				}
 				
 				$period_report[] = array(
+									'period_id' => $value['id'],
 									'emp_id' => $value['emp_id'],
 									'client_id' => $client_id,
 									'project_id' => $project_id,
@@ -413,7 +414,8 @@
 									'total' => $total,
 									'bank_account_number' => $value['employee_data']['bank_account'],
 									'bank_name' => $value['employee_data']['bank_name'],
-									'posted_date' => $date_post
+									'posted_date' => $date_post,
+									'user_c' => $this->session->userdata('logged_in_data')['id']
 								);
 			}
 			return $period_report;

@@ -124,7 +124,9 @@
 				$end->modify('+1 day');
 				$diff_contract = $start->diff($end); // 1 year should be show 364
 				// Change to date 365 = 1 year
-				$month_contract_diff =($diff_contract->format('%y') * 12) + $diff_contract->format('%m');
+				//$month_contract_diff =($diff_contract->format('%y') * 12) + $diff_contract->format('%m');
+				// Change to total days/365 round up
+				$month_contract_diff = ceil($diff_contract->format("%a")/365*12);
 				if($diff_contract->format("%a")+1 < 365){
 					$med_limit = $med_limit * $month_contract_diff / 12;
 				}
@@ -140,7 +142,8 @@
 					$start = $start->modify('-1 year');
 				}
 	//			echo $start->format('Y-m-d').'-'.$end->format('Y-m-d').'-';
-				$month_contract_diff =($diff_contract->format('%y') * 12) + $diff_contract->format('%m');
+				//$month_contract_diff =($diff_contract->format('%y') * 12) + $diff_contract->format('%m');
+				$month_contract_diff = ceil($diff_contract->format("%a")/365*12);
 				$total_used = $this->medical_model->count_medical_reimbursement($emp_id, $start->format('Y-m-d'), $end->format('Y-m-d'))[0]['nominal'];
 			}
 			else{
@@ -199,7 +202,7 @@
 				$this->page_js[]='page/js/medical.js';
 				$this->contents = 'medical/form'; // its your view name, change for as per requirement.
 				$this->data['contents'] = array(
-								'employee' => $this->employee_model->get_emp(array('employee.status' => 'active'))
+								'employee' => $this->employee_model->get_emp(array('employee.status' => 'active'),array(),'',array('name', 'asc'))
 								);
 				$this->layout();
 			}else{

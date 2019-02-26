@@ -123,16 +123,23 @@ class Attendance_model extends CI_Model {
 	public function post_attendance_period($period = '', $period_report = array() , $date,$client_id, $project_id)
     {
 		$this->db->trans_begin();
-
-		$this->db->where(array('period' => $period, 'client_id' => $client_id, 'project_id' => $project_id));
-        $this->db->update('attendance_period', array('status' => 'posted', 'posted_date' =>$date));
-
-		$this->db->insert_batch('attendance_report',$period_report);
-
+		
+		foreach($period_report as $data)
+		{
+			// update data
+			$this->db->where(array('period' => $period, 'client_id' => $client_id, 'project_id' => $project_id,'id' => $data['period_id']));
+			$this->db->update('attendance_period', array('status' => 'posted', 'posted_date' =>$date));
+			
+			// insert to report
+			unset($data['period_id']);
+			$this->db->insert('attendance_report',$data);
+		}
+		//$this->db->insert_batch('attendance_report',$period_report);
+	
 		if ($this->db->trans_status() === FALSE)
 		{
 			$this->db->trans_rollback();
-			throw new Exception ('Error on generate Report');
+			throw new Exception ('Error on post Report, rolled back');
 		}
 		else
 		{
