@@ -12,7 +12,7 @@ $(document).ready(function() {
 	
 	if($('#emp_id').val() != '')
 	{
-		$.get("http://"+ url +"/medical/get_reimbursment_record/"+$('#emp_id').val(), function(data, status){
+		$.get("http://"+ url +"/medical/get_reimbursment_record_new/"+$('#emp_id').val(), function(data, status){
 			saldo = parseInt(data);
 			 $('#balance').text(saldo);
 		});
@@ -20,7 +20,7 @@ $(document).ready(function() {
 	$('#emp_id').change(function() {
 		if($('#date').val() =='')
 		{
-		  $.get("http://"+ url +"/medical/get_reimbursment_record/"+$('#emp_id').val(), function(data, status){
+		  $.get("http://"+ url +"/medical/get_reimbursment_record_new/"+$('#emp_id').val(), function(data, status){
 				real_nominal = $("#real_nominal").val();
 				saldo = parseInt(data);
 				if(saldo >= real_nominal){
@@ -31,7 +31,7 @@ $(document).ready(function() {
 				 $('#balance').text(saldo);
 			});	
 		}else{
-			$.get("http://"+ url +"/medical/get_reimbursment_record/"+$('#emp_id').val()+"/"+$('#date').val(), function(data, status){
+			$.get("http://"+ url +"/medical/get_reimbursment_record_new/"+$('#emp_id').val()+"/"+$('#date').val(), function(data, status){
 				real_nominal = $("#real_nominal").val();
 				saldo = parseInt(data);
 				if(saldo >= real_nominal){
@@ -49,7 +49,7 @@ $(document).ready(function() {
 		{
 		  $('#balance').text(0);
 		}else{
-			$.get("http://"+ url +"/medical/get_reimbursment_record/"+$('#emp_id').val()+"/"+$('#date').val(), function(data, status){
+			$.get("http://"+ url +"/medical/get_reimbursment_record_new/"+$('#emp_id').val()+"/"+$('#date').val(), function(data, status){
 				real_nominal = $("#real_nominal").val();
 				saldo = parseInt(data);
 				if(saldo >= real_nominal){
