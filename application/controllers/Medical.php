@@ -199,7 +199,7 @@
 			if ($this->input->server('REQUEST_METHOD') != 'POST'){
 				$this->front_stuff();
 				$this->data['box_title_1'] = 'Medical Reimbursment';
-				$this->page_js[]='page/js/medical.js';
+				$this->page_js[]='page/js/medical.js?v=06032019';
 				$this->contents = 'medical/form'; // its your view name, change for as per requirement.
 				$this->data['contents'] = array(
 								'employee' => $this->employee_model->get_emp(array('employee.status' => 'active'),array(),'',array('name', 'asc'))
