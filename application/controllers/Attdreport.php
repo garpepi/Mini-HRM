@@ -287,7 +287,8 @@
 		{
 			$period_report = array();
 			//$this->stop_fancy_print($allowance);
-			$attendance_period = $this->attendance_model->get_attd_period(array('attendance_period.period' => $period, 'attendance_period.status' => 'not post', 'attendance_period.client_id' => $client_id, 'attendance_period.project_id' => $project_id));
+			$attendance_period = $this->attendance_model->get_attd_period(array('attendance_period.period' => $period, 'attendance_period.status' => 'not post', 'attendance_period.client_id' => $client_id, 'attendance_period.project_id' => $project_id, 'employee.status' => 'active'));
+			
 			foreach($attendance_period as $key => $value){
 				/*
 				$employee = $this->employee_model->get_emp(array('employee.status' => 'active', 'employee.id' => $value['emp_id']));
@@ -466,7 +467,7 @@
 					$period = $this->input->post('year').'-'.$this->input->post('month');
 					$project_id = $this->input->post('project_id');
 					$client_id = $this->projects_model->get_projects(array("projects.id" => $project_id, "projects.status" => "Active"))[0]["client_id"];
-					$attendance_period = $this->attendance_model->get_attd_period(array('attendance_period.period' => $period, 'attendance_period.status' => 'not post', 'attendance_period.client_id' => $client_id, 'attendance_period.project_id' => $project_id));
+					$attendance_period = $this->attendance_model->get_attd_period(array('attendance_period.period' => $period, 'attendance_period.status' => 'not post', 'attendance_period.client_id' => $client_id, 'attendance_period.project_id' => $project_id, 'employee.status' => 'active'));
 					
 					$period_report = $this->_calculate($period,$client_id,$project_id,$date_post);
 					//$this->stop_fancy_print($this->db->last_query());
