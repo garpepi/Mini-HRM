@@ -362,6 +362,11 @@
 						$difference = 15;
 					}
 					
+					if($difference == 0)
+					{
+						$difference = 1;
+					}
+					
 					// divers start_in holidays and not
 					if(date('D', strtotime($start_in)) == 'Sat' || date('D', strtotime($start_in)) == 'Sun' || in_array($start_in, $holiday))
 					{
