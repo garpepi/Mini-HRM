@@ -10,8 +10,16 @@ class Leaves_qac_model extends CI_Model {
     {    
         $this->db->select('*');
         $this->db->where($where);
+		$this->db->where(array('status' => 'active'));
         $query = $this->db->get('cuti_last_periodic');
         return $query->result_array();
+    }
+	
+	public function drop_qac($where = array())
+    {    
+        $this->db->where($where);
+		$data = array('status' => 'inactive');
+        return $this->db->update('cuti_last_periodic',$data);
     }
 	
 	public function insert_qac_leaves($data = array())

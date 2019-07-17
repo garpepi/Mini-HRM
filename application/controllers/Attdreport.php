@@ -287,7 +287,8 @@
 		{
 			$period_report = array();
 			//$this->stop_fancy_print($allowance);
-			$attendance_period = $this->attendance_model->get_attd_period(array('attendance_period.period' => $period, 'attendance_period.status' => 'not post', 'attendance_period.client_id' => $client_id, 'attendance_period.project_id' => $project_id));
+			$attendance_period = $this->attendance_model->get_attd_period(array('attendance_period.period' => $period, 'attendance_period.status' => 'not post', 'attendance_period.client_id' => $client_id, 'attendance_period.project_id' => $project_id, 'employee.status' => 'active'));
+			
 			foreach($attendance_period as $key => $value){
 				/*
 				$employee = $this->employee_model->get_emp(array('employee.status' => 'active', 'employee.id' => $value['emp_id']));
@@ -361,6 +362,11 @@
 						$difference = 15;
 					}
 					
+					if($difference == 0)
+					{
+						$difference = 1;
+					}
+					
 					// divers start_in holidays and not
 					if(date('D', strtotime($start_in)) == 'Sat' || date('D', strtotime($start_in)) == 'Sun' || in_array($start_in, $holiday))
 					{
@@ -381,13 +387,23 @@
 				
 				// count leaves_remaining
 				$leaves_remaining = 0;
-				if($value['employee_data']['employee_status'] != 1 || $projects_client[0]["leaves_sub"] == 1){// NOT PERMANENT OR SUBTITUTED OVERTIME TO LEAVES YES
-					$leaves_remaining = $this->leaves_qac_model->get_qac(array('emp_id' => $value['emp_id'],'period' => $period))[0]['leaves_remain'];
+				if($value['employee_data']['employee_status'] != 1 || $projects_client[0]["leaves_sub"] == 1)
+				{// NOT PERMANENT OR SUBTITUTED OVERTIME TO LEAVES YES
+					$qac = $this->leaves_qac_model->get_qac(array('emp_id' => $value['emp_id'],'period' => $period));
+					if(!empty($qac))
+					{
+						$leaves_remaining = $this->leaves_qac_model->get_qac(array('emp_id' => $value['emp_id'],'period' => $period))[0]['leaves_remain'];						
+					}
+					else
+					{
+						throw new Exception('Please drop or re-check this employee <b>'.$value['employee_data']['name'].'</b> with employe id - '.$value['emp_id'] .'!');
+					}
 				}else{
 					$leaves_remaining = $this->leaves_model->count_leaves($value['emp_id'], date('Y').'-05-01', date('Y')+1 .'-04-31');
-				}
+				}					
 				
 				$period_report[] = array(
+									'period_id' => $value['id'],
 									'emp_id' => $value['emp_id'],
 									'client_id' => $client_id,
 									'project_id' => $project_id,
@@ -413,7 +429,8 @@
 									'total' => $total,
 									'bank_account_number' => $value['employee_data']['bank_account'],
 									'bank_name' => $value['employee_data']['bank_name'],
-									'posted_date' => $date_post
+									'posted_date' => $date_post,
+									'user_c' => $this->session->userdata('logged_in_data')['id']
 								);
 			}
 			return $period_report;
@@ -464,7 +481,7 @@
 					$period = $this->input->post('year').'-'.$this->input->post('month');
 					$project_id = $this->input->post('project_id');
 					$client_id = $this->projects_model->get_projects(array("projects.id" => $project_id, "projects.status" => "Active"))[0]["client_id"];
-					$attendance_period = $this->attendance_model->get_attd_period(array('attendance_period.period' => $period, 'attendance_period.status' => 'not post', 'attendance_period.client_id' => $client_id, 'attendance_period.project_id' => $project_id));
+					$attendance_period = $this->attendance_model->get_attd_period(array('attendance_period.period' => $period, 'attendance_period.status' => 'not post', 'attendance_period.client_id' => $client_id, 'attendance_period.project_id' => $project_id, 'employee.status' => 'active'));
 					
 					$period_report = $this->_calculate($period,$client_id,$project_id,$date_post);
 					//$this->stop_fancy_print($this->db->last_query());

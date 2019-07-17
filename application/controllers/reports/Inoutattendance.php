@@ -310,7 +310,9 @@
 									$periodd[$value['emp_id']] = array(
 										$period_data['sick_total'], //sick
 										$period_data['leaves_total'],  //leaves / month based on report database leaves
+										// Attend total, masuk di tengah bulan, bulan sebelumnya di anggap masuk
 										$workday-$period_data['sick_total']-$period_data['leaves_total'],
+										//$period_data['attend_total'],
 										$workday
 									);
 								}
@@ -355,7 +357,7 @@
 								array_push($show_data,$lates[$empid]);
 								array_push($show_data,$time_workday[$empid]);
 							}
-							//echo '<pre>';print_r($client_name);exit();
+							//echo '<pre>';print_r($periodd);exit();
 							$this->generate_report($show_data,$start_date,$countemp,$client_name,$project_name);
 						}
 					}else{

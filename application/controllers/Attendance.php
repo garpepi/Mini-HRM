@@ -14,6 +14,7 @@
 			$this->load->model('holiday_model');
 			$this->load->model('attendance_timing_model');
 			$this->load->model('leaves_qac_model');
+			$this->load->model('projects_model');
 
 		}
 
@@ -65,7 +66,6 @@
 				$this->form_validation->set_rules('emp_id', 'Employee Name', 'required');
 				$this->form_validation->set_rules('month', 'Month', 'required|numeric');
 				$this->form_validation->set_rules('year', 'Year', 'required|numeric');
-				//$timing = $this->attendance_timing_model->get_timing();
 				try{
 						if($this->form_validation->run()){
 							$employee_data = $this->employee_model->get_emp(array('employee.id' => $this->input->post('emp_id')))[0];
@@ -78,8 +78,15 @@
 							$attended_period = $this->attendance_model->get_attd_period(array('attendance_period.emp_id' => $employee_id , 'attendance_period.period' => $period));
 							if(empty($attended_period) ){ // data not exist yet
 
+								if($employee_data['employee_status'] != 1 && $employee_data['employee_status'] != 4) // Contract and Probation
+								{
+									if( !(( date('Y-m', strtotime($period)) >= date('Y-m', strtotime($employee_data['contract_start'])) ) &&  ( date('Y-m', strtotime($period)) <= date('Y-m', strtotime($employee_data['contract_end'])) )) )
+									{
+										//out of range from contract
+										throw new Exception('This Employee\'s Contract has been deprecated or has not been started on this period. Please renew / recheck the contract first!');
+									}
+								}
 								$return_id = $this->input_firsttime($finger_id,$period,$employee_id,$client_id,$project_id);
-								//$return_id = $this->attendance_model->insert_attd($period_data,$detail_data);
 
 								redirect('/attendance/edit/'.$return_id);
 							}else{
@@ -298,7 +305,7 @@
 					}
 				}
 				$this->data['contents'] = array(
-									'employee' => $this->employee_model->get_emp(array('employee.status' => 'active', 'employee.employee_status >' => 1)),
+									'employee' => $this->employee_model->get_emp(array('employee.status' => 'active', 'employee.employee_status >' => 1),array(),'',array('employee.name','asc')),
 									'employee_selected' => $this->employee_model->get_emp(array('employee.id' => $attendance_period[0]['emp_id'],'employee.status' => 'active')),
 									'medical' => $this->medical_model->get_medical_reimbursement(array('emp_id' => $attendance_period[0]['emp_id'],'date >=' => $attendance_period[0]['period'].'-01', 'date <=' => date('Y-m-t', strtotime($attendance_period[0]['period'].'-01')) )),
 									'overtime' => $this->overtime_model->get_overtime(array('emp_id' => $attendance_period[0]['emp_id'],'date >=' => $attendance_period[0]['period'].'-01', 'date <=' => date('Y-m-t', strtotime($attendance_period[0]['period'].'-01')) ,'overtime.status' => 'active')),
@@ -689,6 +696,39 @@
 				}else{
 					redirect('attendance/view/'.$period_data['id']);
 				}
+			}else{
+				throw new Exception('Error No ID Found!.');
+			}
+
+		}
+		
+		public function drop($attend_period_id)
+		{
+			$period_datas = $this->attendance_model->get_attd_period(array('attendance_period.id' => $attend_period_id));
+			if(!empty($period_datas))
+			{
+				$period_data = $period_datas[0];
+				if($period_data['status'] == 'posted')
+				{
+					redirect('attendance/view/'.$period_data['id']);
+				}
+
+				unset($period_data['employee_data']);
+				unset($period_data['name']);
+				$period_data['id_old'] = $period_data['id'];
+				unset($period_data['id']);
+				$employee_data = $this->employee_model->get_emp(array('employee.id' => $period_data['emp_id']))[0];
+
+				try{
+					$this->attendance_model->regenerate_attendance_period($period_data,$period_data['id_old']); // delete and put in to history
+					$this->leaves_qac_model->drop_qac(array('period' => $period_data['period'], 'emp_id' => $period_data['emp_id']));
+				}catch(Exception $e){
+					throw new Exception('Error on Drop data.');
+				}
+				
+				$this->session->set_flashdata('form_status', 1);
+				$this->session->set_flashdata('form_msg', 'Success Drop Attendace Data. <b>'.$employee_data['name'].'</b>');
+				redirect('/attendance/');
 			}else{
 				throw new Exception('Error No ID Found!.');
 			}

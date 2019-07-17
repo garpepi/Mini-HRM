@@ -288,6 +288,7 @@
 							);
             $this->layout();
 			}else{
+				$flag_error_api = FALSE;
 				$original_value = $this->employee_model->get_emp(array('employee.id' => $id))[0];
 				$data = $this->input->post();
 				if($data['finger_id'] != $original_value['finger_id']) {
@@ -410,6 +411,9 @@
 							if($qatracker_employee_status_ori['status_code'] == 200){
 								$response_ori=$this->api_model->update_qatracker($emp_id, array('status' => 'inactive', 'email' => $data['email']),$original_value['client_id']);
 							}
+							else{
+								$flag_error_api = TRUE;
+							}
 						}
 						
 						// Get route Qa tracker
@@ -447,6 +451,7 @@
 							}
 							api_log($response['status_code'],$response);
 							if($response['status_code'] != 200){
+								$flag_error_api = TRUE;
 								throw new Exception('Error on update Qa Tracker Data');
 							}
 						}else{
@@ -480,6 +485,10 @@
 									),$qatrackerroute);
 								 api_log($response_insert['status_code'],$response_insert);
 								}
+								if($response_insert['status_code'] !=200)
+								{
+									$flag_error_api = TRUE;
+								}
 							}
 						}
               
@@ -497,7 +506,7 @@
 					}
 
 					$this->session->set_flashdata('form_status', 1);
-					$this->session->set_flashdata('form_msg', 'Success Edit New Application Name');
+					$this->session->set_flashdata('form_msg', 'Success Edit New Application Name'.(($flag_error_api == TRUE ? ', but FAILED to update to QA Tracker!' : '')));
 				}else{
 					$this->session->set_flashdata('form_data', $this->input->post());
 					$this->session->set_flashdata('form_status', 0);

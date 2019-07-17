@@ -33,7 +33,7 @@
 								<tr>
 									<td><?php echo $value['employee_name'];?></td>
 									<td><?php echo $value['date'];?></td>
-									<td><?php echo $value['nominal'];?></td>
+									<td><?php echo number_format($value['nominal']);?></td>
 									<td>
 										<a href="<?php echo base_url().'medical/edit/'.$value['id'];?>" class="btn btn-secondary btn-xs"><i class="fa fa-edit"></i> Edit</a>
 									</td>

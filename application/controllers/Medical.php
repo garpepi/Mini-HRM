@@ -124,7 +124,9 @@
 				$end->modify('+1 day');
 				$diff_contract = $start->diff($end); // 1 year should be show 364
 				// Change to date 365 = 1 year
-				$month_contract_diff =($diff_contract->format('%y') * 12) + $diff_contract->format('%m');
+				//$month_contract_diff =($diff_contract->format('%y') * 12) + $diff_contract->format('%m');
+				// Change to total days/365 round up
+				$month_contract_diff = ceil($diff_contract->format("%a")/365*12);
 				if($diff_contract->format("%a")+1 < 365){
 					$med_limit = $med_limit * $month_contract_diff / 12;
 				}
@@ -140,7 +142,8 @@
 					$start = $start->modify('-1 year');
 				}
 	//			echo $start->format('Y-m-d').'-'.$end->format('Y-m-d').'-';
-				$month_contract_diff =($diff_contract->format('%y') * 12) + $diff_contract->format('%m');
+				//$month_contract_diff =($diff_contract->format('%y') * 12) + $diff_contract->format('%m');
+				$month_contract_diff = ceil($diff_contract->format("%a")/365*12);
 				$total_used = $this->medical_model->count_medical_reimbursement($emp_id, $start->format('Y-m-d'), $end->format('Y-m-d'))[0]['nominal'];
 			}
 			else{
@@ -196,10 +199,10 @@
 			if ($this->input->server('REQUEST_METHOD') != 'POST'){
 				$this->front_stuff();
 				$this->data['box_title_1'] = 'Medical Reimbursment';
-				$this->page_js[]='page/js/medical.js';
+				$this->page_js[]='page/js/medical.js?v=06032019';
 				$this->contents = 'medical/form'; // its your view name, change for as per requirement.
 				$this->data['contents'] = array(
-								'employee' => $this->employee_model->get_emp(array('employee.status' => 'active'))
+								'employee' => $this->employee_model->get_emp(array('employee.status' => 'active'),array(),'',array('name', 'asc'))
 								);
 				$this->layout();
 			}else{
@@ -234,5 +237,137 @@
 				redirect('/medical/add');
 			}
         }
+		
+		public function get_reimbursment_record_new($emp_id,$day=null,$month=null,$year=null) {
+			// NO PLORATE
+			date_default_timezone_set('Etc/GMT+7');
+			$employee = $this->employee_model->get_emp(array('employee.id' => $emp_id))[0];
+			$med_limit = $employee['medical_limit'];
+			$join_date = $employee['join_date'];
+			if(empty($day) || empty($month) || empty($year))
+			{
+				$date_now = date('Y-m-d');				
+			}else{
+				$date_now = date('Y-m-d',strtotime($year.'-'.$month.'-'.$day));
+			}
+			$total_used = 0;
+			if($employee['employee_status'] == 2){
+				//contract counting
+				$contract_start = $employee['contract_start'];
+				$contract_end = $employee['contract_end'];
+				$start = new DateTime($contract_start);
+				$end = new DateTime($contract_end);
+				$diff_contract = $start->diff($end); // 1 year should be show 364
+				// Change to date 365 = 1 year
+				//$month_contract_diff = ceil($diff_contract->format("%a")/365);
+				
+				$total_used = $this->medical_model->count_medical_reimbursement($emp_id, $contract_start, $contract_end)[0]['nominal'];
+				
+			}else{
+				//permanent QA , permanet, probation
+				$start = new DateTime(date("Y").'-05-01');
+				$end = new DateTime($date_now);
+				$diff_contract = $start->diff($end);
+				if($start < $end == false) //start more then = cahnge range forward
+				{
+					$start = $start->modify('-1 year');
+				}
+				$total_used = $this->medical_model->count_medical_reimbursement($emp_id, $start->format('Y-m-d'), $end->format('Y-m-d'))[0]['nominal'];
+			}
+			
+			echo ($med_limit - $total_used > 0 ? $med_limit - $total_used : 0) ;
+			/*
+			return array(
+				'used' => $total_used,
+				'balance' => ($med_limit - $total_used > 0 ? $med_limit - $total_used : 0),
+				'limit' => $med_limit
+			);
+			*/
+        }
+		
+		public function test(){
+			$employee = $this->employee_model->get_emp(array('employee.status' => 'active', 'employee.finger_id !=' => 'NULL', 'employee.project_id !=' => '0' ));
+			//$this->stop_fancy_print($employee);		
+			
+			echo '
+			<table border=1>
+				<tr>
+					<td>
+						Employee Id
+					</td>
+					<td>
+						Employee Name
+					</td>
+					<td>
+						Client
+					</td>
+					<td>
+						Project
+					</td>
+					<td>
+						Medical on List
+					</td>
+					<td>
+						Medical used
+					</td>
+					<td>
+						Medical Old Limit
+					</td>
+					<td>
+						Medical Old Balance
+					</td>
+					<td>
+						Medical New Limit
+					</td>
+					<td>
+						Medical New Balance
+					</td>				
+				</tr>
+			';
+			
+			foreach($employee as $key => $value)
+			{
+				
+				echo '
+				<tr>
+					<td>
+						'.$value['id'].'
+					</td>
+					<td>
+						'.$value['name'].'
+					</td>
+					<td>
+						'.$value['clientname'].'
+					</td>
+					<td>
+						'.$value['projectname'].'
+					</td>
+					<td>
+						'.number_format($value['medical_limit']).'
+					</td>
+					<td>
+						'.number_format($this->get_reimbursment_record($value['id'])['used']).'
+					</td>
+					<td>
+						'.number_format($this->get_reimbursment_record($value['id'])['limit']).'
+					</td>
+					<td>
+						'.number_format($this->get_reimbursment_record($value['id'])['balance']).'
+					</td>
+					<td>
+						'.number_format($this->get_reimbursment_record_new($value['id'])['limit']).'
+					</td>
+					<td>
+						'.number_format($this->get_reimbursment_record_new($value['id'])['balance']).'
+					</td>				
+				</tr>
+			';
+				
+			}
+			
+			echo '</table>';
+			
+		}
+		
 		
     }
