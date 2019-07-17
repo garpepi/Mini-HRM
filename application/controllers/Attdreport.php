@@ -387,11 +387,20 @@
 				
 				// count leaves_remaining
 				$leaves_remaining = 0;
-				if($value['employee_data']['employee_status'] != 1 || $projects_client[0]["leaves_sub"] == 1){// NOT PERMANENT OR SUBTITUTED OVERTIME TO LEAVES YES
-					$leaves_remaining = $this->leaves_qac_model->get_qac(array('emp_id' => $value['emp_id'],'period' => $period))[0]['leaves_remain'];
+				if($value['employee_data']['employee_status'] != 1 || $projects_client[0]["leaves_sub"] == 1)
+				{// NOT PERMANENT OR SUBTITUTED OVERTIME TO LEAVES YES
+					$qac = $this->leaves_qac_model->get_qac(array('emp_id' => $value['emp_id'],'period' => $period));
+					if(!empty($qac))
+					{
+						$leaves_remaining = $this->leaves_qac_model->get_qac(array('emp_id' => $value['emp_id'],'period' => $period))[0]['leaves_remain'];						
+					}
+					else
+					{
+						throw new Exception('Please drop or re-check this employee <b>'.$value['employee_data']['name'].'</b> with employe id - '.$value['emp_id'] .'!');
+					}
 				}else{
 					$leaves_remaining = $this->leaves_model->count_leaves($value['emp_id'], date('Y').'-05-01', date('Y')+1 .'-04-31');
-				}
+				}					
 				
 				$period_report[] = array(
 									'period_id' => $value['id'],

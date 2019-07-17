@@ -63,7 +63,8 @@
 								<?php if(!empty($contents['attendant_detail'])):
 									if(!$contents['status_view'])
 									{
-										echo '<a href='.base_url().'attendance/regenerate/'.$contents['attendant_period'][0]['id'].'>Re-Generate Data!</a>';										
+										echo '<a href='.base_url().'attendance/regenerate/'.$contents['attendant_period'][0]['id'].'>Re-Generate Data!</a>'."<br>";
+										echo '<a href='.base_url().'attendance/drop/'.$contents['attendant_period'][0]['id'].'>Drop Data!</a>';										
 									}
 								?>
 								<form method='POST' action='<?php echo base_url().'attendance/edit/'.$contents['attendant_period'][0]['id'];?>' id="formulir">

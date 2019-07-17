@@ -701,6 +701,39 @@
 			}
 
 		}
+		
+		public function drop($attend_period_id)
+		{
+			$period_datas = $this->attendance_model->get_attd_period(array('attendance_period.id' => $attend_period_id));
+			if(!empty($period_datas))
+			{
+				$period_data = $period_datas[0];
+				if($period_data['status'] == 'posted')
+				{
+					redirect('attendance/view/'.$period_data['id']);
+				}
+
+				unset($period_data['employee_data']);
+				unset($period_data['name']);
+				$period_data['id_old'] = $period_data['id'];
+				unset($period_data['id']);
+				$employee_data = $this->employee_model->get_emp(array('employee.id' => $period_data['emp_id']))[0];
+
+				try{
+					$this->attendance_model->regenerate_attendance_period($period_data,$period_data['id_old']); // delete and put in to history
+					$this->leaves_qac_model->drop_qac(array('period' => $period_data['period'], 'emp_id' => $period_data['emp_id']));
+				}catch(Exception $e){
+					throw new Exception('Error on Drop data.');
+				}
+				
+				$this->session->set_flashdata('form_status', 1);
+				$this->session->set_flashdata('form_msg', 'Success Drop Attendace Data. <b>'.$employee_data['name'].'</b>');
+				redirect('/attendance/');
+			}else{
+				throw new Exception('Error No ID Found!.');
+			}
+
+		}
 
 		public function view($attend_period_id)
 		{
