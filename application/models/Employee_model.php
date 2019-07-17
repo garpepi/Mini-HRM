@@ -8,7 +8,7 @@ class Employee_model extends CI_Model {
 
 	public function get_emp($where = array(),$where_not_in = array(),$string_where = '',$order_by = array())
     {
-        $this->db->select('employee.*, cuti.limit as cuti_limit, medical.nominal as medical_limit, employee_status.name as employee_status_name, bank_list.name as bank_name, client.name as clientname');
+        $this->db->select('employee.*, cuti.limit as cuti_limit, medical.nominal as medical_limit, employee_status.name as employee_status_name, bank_list.name as bank_name, client.name as clientname, projects.name as projectname');
     		$this->db->from('employee');
     		$this->db->join('cuti', 'cuti.emp_id = employee.id','left');
     		$this->db->join('medical', 'medical.emp_id = employee.id','left');
