@@ -370,13 +370,13 @@
 								}
 								
 							}
-							$this->stop_fancy_print($struk_dat);
-							//$this->overtime_model->insert_raw_overtime($struk_dat);
-							//return_flash(1,'Success Uploading Overtime Data.');
-							//redirect('overtime/raw_queue');
+							//$this->stop_fancy_print($struk_dat);
+							$this->overtime_model->insert_raw_overtime($struk_dat);
+							return_flash(1,'Success Uploading Overtime Data.');
+							redirect('overtime/raw_queue');
 						} catch(Exception $e) {
-							//return_flash(0,'Error loading file "'.pathinfo($file['file_name'],PATHINFO_BASENAME).'": '.$e->getMessage());
-							//redirect('overtime/upload');
+							return_flash(0,'Error loading file "'.pathinfo($file['file_name'],PATHINFO_BASENAME).'": '.$e->getMessage());
+							redirect('overtime/upload');
 						}
 
 				}
