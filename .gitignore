@@ -35,3 +35,4 @@ composer.lock
 application/composer.lock
 logs/*
 application/config/email.php
+assets/example folders/*

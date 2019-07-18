@@ -27,7 +27,8 @@ $(document).ready(function() {
 			{"data": "employee_name"},
 			{"data": "start_in"},
 			{"data": "end_out"},
-			{"data": "upload_status"}
+			{"data": "upload_status"},
+			{"data": "desc_status"}
 		],
 		"order": [[ 0, "desc" ]]
 

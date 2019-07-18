@@ -226,6 +226,7 @@
 								);
 				$this->layout();
 			}else{
+				
 				$config['upload_path']          = './xlsuploads/';
 				$config['allowed_types']        = 'xls|xlsx';
 				$config['detect_mime'] 			= TRUE;
@@ -277,17 +278,37 @@
 								$raw_data[] = $rowDatas[0];
 							}							
 							//remove header
+							//$this->stop_fancy_print($raw_data);
+							$month = $raw_data[0][1];
+							$years = $raw_data[1][1];
+							
+							if(!is_numeric($month) || empty($month) || $month < 1 || $month >= 12)
+							{
+								throw new Exception('Month not valid!');
+							}
+							
+							if(strlen($month) != 2 )
+							{
+								throw new Exception('Month format should be 2 character! Ex: 01');
+							}
+							
+							if(!is_numeric($years) || empty($years) || strlen($years) != 4 )
+							{
+								throw new Exception('Years not valid!');
+							}
 							unset($raw_data[0]);
+							unset($raw_data[1]);
+							unset($raw_data[2]);
+							unset($raw_data[3]);
 							
 							foreach($raw_data as $key => $value)
 							{
-								
-								$date = str_replace("/","-",PHPExcel_Style_NumberFormat::toFormattedString($value[1],'YYYY-MM-DD' ));
-								$start_in = str_replace("/","-",PHPExcel_Style_NumberFormat::toFormattedString($value[5],'YYYY-MM-DD HH:i:s'));
-								$end_out = str_replace("/","-",PHPExcel_Style_NumberFormat::toFormattedString($value[6],'YYYY-MM-DD HH:i:s'));
+								$date = date('Y-m-d', strtotime($years."-".$month."-".$value[1]));
+								$start_in = date('Y-m-d H:i:s', strtotime($date." ".str_replace('.',':',$value[5]).":00"));
+								$end_out = date('Y-m-d H:i:s', strtotime($date." ".str_replace('.',':',$value[6]).":00"));
 								
 								// filter and validate the date before add to data structure
-								if($this->validateDate($date,'Y-m-d') && $this->validateDate($start_in,'Y-m-d H:i:s') && $this->validateDate($end_out,'Y-m-d H:i:s'))
+								if($this->validateDate($date,'Y-m-d') && $this->validateDate($start_in,'Y-m-d H:i:s') && $this->validateDate($end_out,'Y-m-d H:i:s') && (strtotime($end_out) > strtotime($start_in)) && preg_match('/^(?:\d|[01]\d|2[0-3]).[0-5]\d/',$value[5]) && preg_match('/^(?:\d|[01]\d|2[0-3]).[0-5]\d/',$value[6]))
 								{
 									$struk_dat[] = array(
 										'no' => $value[0],
@@ -304,6 +325,35 @@
 								}
 								else
 								{
+									// Error Status
+									$err_stat = '';
+									if(!$this->validateDate($date,'Y-m-d'))
+									{
+										$err_stat = 'Period date Invalid!';
+									}
+									elseif(!$this->validateDate($start_in,'Y-m-d H:i:s'))
+									{
+										$err_stat = 'Start Format compress invalid!';
+									}
+									elseif(!$this->validateDate($end_out,'Y-m-d H:i:s'))
+									{
+										$err_stat = 'End Format compress invalid!';
+									}
+									elseif(!(strtotime($end_out) > strtotime($start_in)))
+									{
+										$err_stat = 'End sooner than Start!';
+									}elseif(!preg_match('/^(?:\d|[01]\d|2[0-3]).[0-5]\d/',$value[5]))
+									{
+										$err_stat = 'Start input invalid! '.$value[5];
+									}
+									elseif(!preg_match('/^(?:\d|[01]\d|2[0-3]).[0-5]\d/',$value[6]))
+									{
+										$err_stat = 'End input invalid! '.$value[6];
+									}
+									else
+									{
+										$err_stat = 'Others';
+									}
 									$struk_dat[] = array(
 										'no' => $value[0],
 										'date' => $date,
@@ -315,17 +365,18 @@
 										'user_c' => $this->session->userdata('logged_in_data')['id'],
 										'upload_status' => 'RBS',
 										//'desc_status' => 'Date / Start / End not Valid'
-										'desc_status' => ''
+										'desc_status' => $err_stat
 									);
 								}
 								
 							}
-							$this->overtime_model->insert_raw_overtime($struk_dat);
-							return_flash(1,'Success Uploading Overtime Data.');
-							redirect('overtime/raw_queue');
+							$this->stop_fancy_print($struk_dat);
+							//$this->overtime_model->insert_raw_overtime($struk_dat);
+							//return_flash(1,'Success Uploading Overtime Data.');
+							//redirect('overtime/raw_queue');
 						} catch(Exception $e) {
-							return_flash(0,'Error loading file "'.pathinfo($file['file_name'],PATHINFO_BASENAME).'": '.$e->getMessage());
-							redirect('overtime/upload');
+							//return_flash(0,'Error loading file "'.pathinfo($file['file_name'],PATHINFO_BASENAME).'": '.$e->getMessage());
+							//redirect('overtime/upload');
 						}
 
 				}

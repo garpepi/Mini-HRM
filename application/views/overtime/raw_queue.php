@@ -90,6 +90,7 @@
 								<th>In</th>
 								<th>Out</th>
 								<th>Status</th>
+								<th>Desc Status</th>
 							</tr>
 						</thead>
 						<tbody>
