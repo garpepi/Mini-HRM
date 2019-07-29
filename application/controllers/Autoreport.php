@@ -116,6 +116,7 @@
 					if($this->email->send()){
 						return 'Sending Ok';
 					}else{
+						echo 'Sending Not Ok';
 						return 'Sending Not Ok';
 					}
 				}else{
@@ -165,7 +166,7 @@
 			}else{
 				if(!$this->isWeekend(date('Y-m-d')))
 				{
-				  return $this->sending_email( 'no-reply.hrm@adi-internal.com', 'Adidata - miniHRM App', $email, array(), 'Contract Summary Report '.date('d M Y'), "Dear Admin Adidata, \n\n This system was generate about employee that has ending contract in next ".$this->months_end." months. \n\n Thanks & Regards, \n admin@Adidata.co.id \n\n\n\n Adidata - miniHRM App - by Garpepi", './genreports/Summary Employee Contract Report '.date('d M Y').'.xls');
+				  return $this->sending_email( 'admin@hrm.adi-internal.com', 'Adidata - miniHRM App', $email, array(), 'Contract Summary Report '.date('d M Y'), "Dear Admin Adidata, \n\n This system was generate about employee that has ending contract in next ".$this->months_end." months. \n\n Thanks & Regards, \n admin@Adidata.co.id \n\n\n\n Adidata - miniHRM App - by Garpepi", './genreports/Summary Employee Contract Report '.date('d M Y').'.xls');
 				}else{
 				  return 'Today is weekend';
 				}
