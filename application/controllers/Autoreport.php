@@ -116,11 +116,11 @@
 					if($this->email->send()){
 						return 'Sending Ok';
 					}else{
-						echo 'Sending Not Ok';
+						apps_log('Error Sending Auto Email : ', $this->email->print_debugger());
 						return 'Sending Not Ok';
 					}
 				}else{
-					echo 'file not found - '. $attachment;
+					apps_log('Error Sending Auto Email : ', 'file not found - '. $attachment);
 					exit();
 					return 'Sending Not Ok - no attachment';
 				}

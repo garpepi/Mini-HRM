@@ -138,3 +138,14 @@ if ( ! function_exists('api_log'))
 		return true;
     }
 }
+
+if ( ! function_exists('apps_log'))
+{
+    function api_log($status = 0, $msg= '', $url='')
+    {
+		date_default_timezone_set('Asia/Jakarta');
+		write_file('./logs/app'.date('Y-m-d').'.log', date('Y-m-d H:i:s').' '.session_id().' Status : '.$status."\n", "a+");
+		write_file('./logs/app'.date('Y-m-d').'.log', date('Y-m-d H:i:s').' '.session_id().' Message : '.print_r($msg, true)."\n", "a+");
+		return true;
+    }
+}
