@@ -282,7 +282,7 @@
 							$month = $raw_data[0][1];
 							$years = $raw_data[1][1];
 							
-							if(!is_numeric($month) || empty($month) || $month < 1 || $month >= 12)
+							if(!is_numeric($month) || empty($month) || $month < 1 || $month > 12)
 							{
 								throw new Exception('Month not valid!');
 							}
