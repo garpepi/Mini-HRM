@@ -235,7 +235,7 @@
 					}
 					
 					$detail_data[]= array(
-									'date' => $key,
+									'date' => $period.'-'.$dateString,
 									'arrived' => '08:00:00',
 									'returns '=> '17:00:00',
 									'attend' => $attend,
