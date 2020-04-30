@@ -181,8 +181,10 @@
 			// setting data to ready to insert to detail
 				// Default to Attend CR
 				$autoAttend = $this->settings_model->get_autoAttend();
+				log_message('info', 'Auto Attend = '.$autoAttend);
 			if($autoAttend == 1 || $autoAttend == True || $autoAttend == 'True'){
 				// Default to Attend
+				log_message('debug', 'Schema Default Auto Attend');
 				for($dateLoop = 1; $dateLoop >= date('t' , strtotime($period.'-01') );$dateLoop++){
 					$attend = 0;
 					$day_off = 0;
@@ -245,6 +247,7 @@
 				}
 				
 			}else{
+				log_message('debug', 'Schema NON Default Auto Attend');
 				//get raw attendance
 				$raw = $this->raw_attendance_model->get_ra($finger_id,$period,$client_id,$project_id);
 				foreach($raw as $key => $value){
@@ -342,6 +345,8 @@
 					);
 
 		//$this->stop_fancy_print($period_data);
+			log_message('debug', 'PERIOD DATA = '.json_encode($period_data));
+			log_message('debug', 'DETAIL DATA = '.json_encode($detail_data));
 			return $this->attendance_model->insert_attd($period_data,$detail_data);
 		}
 
