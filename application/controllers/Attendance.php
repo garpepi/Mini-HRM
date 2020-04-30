@@ -180,7 +180,8 @@
 			
 			// setting data to ready to insert to detail
 				// Default to Attend CR
-			if($this->settings_model->get_autoAttend() == 1){
+				$autoAttend = $this->settings_model->get_autoAttend();
+			if($autoAttend == 1 || $autoAttend == True || $autoAttend == 'True'){
 				// Default to Attend
 				for($dateLoop = 1; $dateLoop >= date('t' , strtotime($period.'-01') );$dateLoop++){
 					$attend = 0;
