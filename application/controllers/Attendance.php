@@ -182,7 +182,7 @@
 				// Default to Attend CR
 				$autoAttend = $this->settings_model->get_autoAttend();
 				log_message('info', 'Auto Attend = '.$autoAttend);
-			if($autoAttend == 1 || $autoAttend == True || $autoAttend == 'True'){
+			if($autoAttend == 1 || $autoAttend == 'True'){
 				// Default to Attend
 				log_message('debug', 'Schema Default Auto Attend');
 				for($dateLoop = 1; $dateLoop >= date('t' , strtotime($period.'-01') );$dateLoop++){
