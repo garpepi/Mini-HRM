@@ -186,6 +186,7 @@
 				// Default to Attend
 				log_message('debug', 'Schema Default Auto Attend');
 				for($dateLoop = 1; $dateLoop >= date('t' , strtotime($period.'-01') );$dateLoop++){
+					log_message('debug', 'Period = '. $period. " Dateloop = ".$dateLoop );
 					$attend = 0;
 					$day_off = 0;
 					$late = 0;
@@ -215,6 +216,7 @@
 									// tambah cuti jika lembur
 								}
 							}
+							
 						// Daily Report Fetching
 						if(in_array($period.'-'.$dateString,$daily_report_data) && $attend == 1){
 						  if($overtimeStat == 1 || $attend == 1)
@@ -232,6 +234,7 @@
 							}
 						}
 					}
+					
 					$detail_data[]= array(
 									'date' => $key,
 									'arrived' => '08:00:00',
