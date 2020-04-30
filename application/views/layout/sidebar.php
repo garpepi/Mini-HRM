@@ -156,6 +156,9 @@
                                 <li>
 									<a href="<?php echo base_url().'autoreportemail'?>"><i class="fa fa-list fa-fw"></i> Autoreport Email list</a>
 								</li>
+								<li>
+									<a href="<?php echo base_url().'settings'?>"><i class="fa fa-list fa-fw"></i> Settings</a>
+								</li>
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>

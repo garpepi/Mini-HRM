@@ -15,6 +15,7 @@
 			$this->load->model('attendance_timing_model');
 			$this->load->model('leaves_qac_model');
 			$this->load->model('projects_model');
+			$this->load->model('settings_model');
 
 		}
 
@@ -131,9 +132,8 @@
 			$medical_total = 0;
 			$holiday = array();
 			$leaves_data = array();
-
-			//get raw attendance
-			$raw = $this->raw_attendance_model->get_ra($finger_id,$period,$client_id,$project_id);
+			
+			
 			//get medical reimbursment
 			$medical_reimbursement = $this->medical_model->get_medical_reimbursement(array('emp_id' => $employee_id, 'date >=' => $period.'-01','date <= ' => date('Y-m-t' , strtotime($period.'-01'))));
 			//get holiday
@@ -177,77 +177,148 @@
 				}
 			}
 
+			
 			// setting data to ready to insert to detail
+				// Default to Attend CR
+			if($this->settings_model->get_autoAttend() == 1){
+				// Default to Attend
+				for($dateLoop = 1; $dateLoop >= date('t' , strtotime($period.'-01') );$dateLoop++){
+					$attend = 0;
+					$day_off = 0;
+					$late = 0;
+					$daily_report = 0;
+					$weekend = 0; // 0 Week daily , 1 Weekend
+					$overtimeStat = 0;
+					
+					if (strlen($dateLoop) == 1) {
+						$dateString = '0'.$dateloop;
+					}else{
+						$dateString = $dateloop;
+					}
+					
+					if(date('D', strtotime($period.'-'.$dateString)) == 'Sat' || date('D', strtotime($period.'-'.$dateString)) == 'Sun' || in_array($period.'-'.$dateString, $holiday)){
+						$weekend = 1;
+					}
 
-			foreach($raw as $key => $value){
-				$attend = 0;
-				$day_off = 0;
-				$late = 0;
-				$daily_report = 0;
-				$weekend = 0; // 0 Week daily , 1 Weekend
-				$overtimeStat = 0;
-
-				if(date('D', strtotime($key)) == 'Sat' || date('D', strtotime($key)) == 'Sun' || in_array($key, $holiday)){
-					$weekend = 1;
-				}
-
-				if(!empty($value['come_in']) || !empty($value['go_home'])){
-					if($weekend == 1){
+					if($weekend == 0){
+						$attend = 1;
+						$attend_total++;
+					}else{
 						foreach($overtime as $overtimes) {
-							if($overtimes['date'] == $key){
-								$attend = 1;
-								$attend_total++;
-								$overtimeStat = 1;
-								// tambah cuti jika lembur
+								if($overtimes['date'] == $period.'-'.$dateString){
+									$attend = 1;
+									$attend_total++;
+									$overtimeStat = 1;
+									// tambah cuti jika lembur
+								}
+							}
+						// Daily Report Fetching
+						if(in_array($period.'-'.$dateString,$daily_report_data) && $attend == 1){
+						  if($overtimeStat == 1 || $attend == 1)
+						  {
+							$daily_report = 1;
+							$daily_report_total++;
+						  }
+						}
+						
+						if(!empty($medical_reimbursement)){
+							foreach($medical_reimbursement as $med_reimburse){
+								if($period.'-'.$dateString == $med_reimburse['date']){
+									$medical_total = $medical_total + $med_reimburse['nominal'];
+								}
 							}
 						}
-					}else{
-						if(!empty($value['come_in']) && !empty($value['go_home']) && strtotime($value['come_in']) < strtotime($timing['comes']['time'])){
-							$attend = 1;
-							$attend_total++;
+
+						$detail_data[]= array(
+									'date' => $key,
+									'arrived' => '08:00:00',
+									'returns '=> '17:00:00',
+									'attend' => $attend,
+									'leaves' => $day_off,
+									'late' => $late,
+									'daily_report' => $daily_report,
+									'user_c' => $this->session->userdata('logged_in_data')['id']
+								);
+					}
+					
+				}
+				
+			}else{
+				//get raw attendance
+				$raw = $this->raw_attendance_model->get_ra($finger_id,$period,$client_id,$project_id);
+				foreach($raw as $key => $value){
+					$attend = 0;
+					$day_off = 0;
+					$late = 0;
+					$daily_report = 0;
+					$weekend = 0; // 0 Week daily , 1 Weekend
+					$overtimeStat = 0;
+
+					if(date('D', strtotime($key)) == 'Sat' || date('D', strtotime($key)) == 'Sun' || in_array($key, $holiday)){
+						$weekend = 1;
+					}
+
+					if(!empty($value['come_in']) || !empty($value['go_home'])){
+						if($weekend == 1){
+							foreach($overtime as $overtimes) {
+								if($overtimes['date'] == $key){
+									$attend = 1;
+									$attend_total++;
+									$overtimeStat = 1;
+									// tambah cuti jika lembur
+								}
+							}
 						}else{
-							$attend = 1;
-							$attend_total++;
-							$late = 1;
-							$late_total++;
+							if(!empty($value['come_in']) && !empty($value['go_home']) && strtotime($value['come_in']) < strtotime($timing['comes']['time'])){
+								$attend = 1;
+								$attend_total++;
+							}else{
+								$attend = 1;
+								$attend_total++;
+								$late = 1;
+								$late_total++;
+							}
+						}
+
+					}else{
+						if($weekend == 0){
+							$day_off = 1;
+							$day_off_total++;
+						}
+					}
+					
+					// Daily Report Fetching
+					if(in_array($key,$daily_report_data) && $attend == 1){
+					  if($overtimeStat == 1 || $attend == 1)
+					  {
+						$daily_report = 1;
+						$daily_report_total++;
+					  }
+					}
+
+
+					if(!empty($medical_reimbursement)){
+						foreach($medical_reimbursement as $med_reimburse){
+							if($key == $med_reimburse['date']){
+								$medical_total = $medical_total + $med_reimburse['nominal'];
+							}
 						}
 					}
 
-				}else{
-					if($weekend == 0){
-						$day_off = 1;
-						$day_off_total++;
-					}
+					$detail_data[]= array(
+								'date' => $key,
+								'arrived' => (!empty($value['come_in']) ? (strtotime($value['come_in']) < strtotime('12:00') ? $value['come_in'] : NULL) : NULL),
+								'returns '=> (!empty($value['go_home']) ? $value['go_home'] : NULL),
+								'attend' => $attend,
+								'leaves' => $day_off,
+								'late' => $late,
+								'daily_report' => $daily_report,
+								'user_c' => $this->session->userdata('logged_in_data')['id']
+							);
 				}
-        // Daily Report Fetching
-				if(in_array($key,$daily_report_data) && $attend == 1){
-				  if($overtimeStat == 1 || $attend == 1)
-				  {
-					$daily_report = 1;
-					$daily_report_total++;
-				  }
-				}
-
-
-				if(!empty($medical_reimbursement)){
-					foreach($medical_reimbursement as $med_reimburse){
-						if($key == $med_reimburse['date']){
-							$medical_total = $medical_total + $med_reimburse['nominal'];
-						}
-					}
-				}
-
-				$detail_data[]= array(
-							'date' => $key,
-							'arrived' => (!empty($value['come_in']) ? (strtotime($value['come_in']) < strtotime('12:00') ? $value['come_in'] : NULL) : NULL),
-							'returns '=> (!empty($value['go_home']) ? $value['go_home'] : NULL),
-							'attend' => $attend,
-							'leaves' => $day_off,
-							'late' => $late,
-							'daily_report' => $daily_report,
-							'user_c' => $this->session->userdata('logged_in_data')['id']
-						);
 			}
+			
+			
 			//Get employee per this period
 			$employees_data = $this->employee_model->get_emp(array('employee.id' => $employee_id))[0];
 			$client_id = $employees_data['client_id'];
