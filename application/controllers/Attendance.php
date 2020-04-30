@@ -185,8 +185,7 @@
 			if($autoAttend == 1 || $autoAttend == 'True'){
 				// Default to Attend
 				log_message('debug', 'Schema Default Auto Attend');
-				for($dateLoop = 1; $dateLoop >= date('t' , strtotime($period.'-01') );$dateLoop++){
-					log_message('debug', 'Period = '. $period. " Dateloop = ".$dateLoop );
+				for($dateLoop = 1; $dateLoop <= date('t' , strtotime($period.'-01') );$dateLoop++){
 					$attend = 0;
 					$day_off = 0;
 					$late = 0;
