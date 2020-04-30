@@ -194,9 +194,9 @@
 					$overtimeStat = 0;
 					
 					if (strlen($dateLoop) == 1) {
-						$dateString = '0'.$dateloop;
+						$dateString = '0'.$dateLoop;
 					}else{
-						$dateString = $dateloop;
+						$dateString = $dateLoop;
 					}
 					
 					if(date('D', strtotime($period.'-'.$dateString)) == 'Sat' || date('D', strtotime($period.'-'.$dateString)) == 'Sun' || in_array($period.'-'.$dateString, $holiday)){
