@@ -231,8 +231,8 @@
 								}
 							}
 						}
-
-						$detail_data[]= array(
+					}
+					$detail_data[]= array(
 									'date' => $key,
 									'arrived' => '08:00:00',
 									'returns '=> '17:00:00',
@@ -242,7 +242,6 @@
 									'daily_report' => $daily_report,
 									'user_c' => $this->session->userdata('logged_in_data')['id']
 								);
-					}
 					
 				}
 				
