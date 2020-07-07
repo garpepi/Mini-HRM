@@ -137,6 +137,15 @@ class Api extends REST_Controller {
             ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
         }
     }
+	
+	public function raw_overtime_post()
+    {
+        $this->load->model('overtime_model');
+		//$this->overtime_model->insert_single_raw_overtime($struk_dat);
+		$data = $this->post()['data'];
+		$result = $this->overtime_model->insert_single_raw_overtime($data);
+		$this->set_response($result, REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+    }
 
     public function users_get()
     {

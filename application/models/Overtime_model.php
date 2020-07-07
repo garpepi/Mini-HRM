@@ -94,6 +94,22 @@ class Overtime_model extends CI_Model {
 		return true; 
     }
 	
+	public function insert_single_raw_overtime($data)
+    {   
+		$this->db->trans_begin();
+		$this->db->insert('raw_overtime', $data);			
+		if ($this->db->trans_status() === FALSE)
+		{
+				$this->db->trans_rollback();
+				throw new Exception ('Error on insert');
+		}
+		else
+		{
+				$this->db->trans_commit();
+		}
+		return true; 
+    }
+	
 	public function get_queue_overtime($where = array(), $order_by=array())
     {    
         $this->db->select('raw_overtime.*, employee.name as employee_name');
