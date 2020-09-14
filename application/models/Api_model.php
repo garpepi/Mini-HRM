@@ -275,7 +275,7 @@ class Api_model extends CI_Model {
 
 			//$uri = $this->config->item('qatracker').'/Api/dailyreport';
 			$uri = $this->cm->get_url(array('app_id' => 1, 'client_id' => $client_id)).'/Api/dailyreport';
-			api_log("Initiate API","get_daily_report",$uri);
+			api_log("Initiate API","get_daily_report id=".$id.":period=".$period,$uri);
 			if(empty($uri)){
 				$return['status_code'] = 510;
 				$return['msg'] = 'URL Not Configure, please tell dev app';

@@ -176,7 +176,6 @@
 					}
 				}
 			}
-
 			
 			// setting data to ready to insert to detail
 				// Default to Attend CR
@@ -215,21 +214,17 @@
 									// tambah cuti jika lembur
 								}
 							}
-							
-						// Daily Report Fetching
-						if(in_array($period.'-'.$dateString,$daily_report_data) && $attend == 1){
-						  if($overtimeStat == 1 || $attend == 1)
-						  {
-							$daily_report = 1;
-							$daily_report_total++;
-						  }
-						}
-						
-						if(!empty($medical_reimbursement)){
-							foreach($medical_reimbursement as $med_reimburse){
-								if($period.'-'.$dateString == $med_reimburse['date']){
-									$medical_total = $medical_total + $med_reimburse['nominal'];
-								}
+					}
+					// Daily Report Fetching
+					if(in_array($period.'-'.$dateString,$daily_report_data) && $attend == 1){
+						$daily_report = 1;
+						$daily_report_total++;
+					}
+					
+					if(!empty($medical_reimbursement)){
+						foreach($medical_reimbursement as $med_reimburse){
+							if($period.'-'.$dateString == $med_reimburse['date']){
+								$medical_total = $medical_total + $med_reimburse['nominal'];
 							}
 						}
 					}
@@ -322,7 +317,6 @@
 							);
 				}
 			}
-			
 			
 			//Get employee per this period
 			$employees_data = $this->employee_model->get_emp(array('employee.id' => $employee_id))[0];
