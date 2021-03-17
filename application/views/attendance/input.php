@@ -60,7 +60,7 @@
 								<div class="well">
 									<h5><?php echo (empty($contents['attendant_detail']) ? 'No Data Available' : $contents['employee_selected'][0]['name']);?></h5>
 								</div>
-								<?php if(!empty($contents['attendant_detail'])):
+								<?php if(!empty($contents['attendant_detail']) || isset($contents['attendant_period'][0]['id'])):
 									if(!$contents['status_view'])
 									{
 										echo '<a href='.base_url().'attendance/regenerate/'.$contents['attendant_period'][0]['id'].'>Re-Generate Data!</a>'."<br>";
