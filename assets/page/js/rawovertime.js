@@ -33,4 +33,9 @@ $(document).ready(function() {
 		"order": [[ 0, "desc" ]]
 
 	});
+
+	$('.acc-all').click(function() {
+		console.log("hello");
+		$("input:radio.acc-rad").attr("checked", "checked");
+	});
 });

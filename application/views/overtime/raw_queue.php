@@ -24,6 +24,9 @@
 							<div class="col-md-2 pull-right">
 								<input type = "submit" class="btn btn-default"/>
 							</div>
+							<div class="col-md-2 pull-right">
+								<button type = "button" class="btn btn-default acc-all"/>Accept All </button>
+							</div>
 							<div class="col-md-12">
 								<table width="100%" class="table table-striped table-bordered table-hover">
 									<thead>
@@ -51,7 +54,7 @@
 											<td><?php echo date("d/m/Y H:i:s" , strtotime($value['end_out']));?></td>
 											<td>
 											<label class="radio-inline">
-											  <input type=radio name="status[<?php echo $value['id'];?>]" value='accepted' required >Accept
+											  <input type=radio name="status[<?php echo $value['id'];?>]" value='accepted' class="acc-rad" required >Accept
 											</label>
 											<label class="radio-inline">
 											  <input type=radio name="status[<?php echo $value['id'];?>]" value='reject' >Reject
@@ -67,6 +70,9 @@
 						<div class="row">
 							<div class="col-md-2 pull-right">
 							<input type = "submit" class="btn btn-default"/>
+							</div>
+							<div class="col-md-2 pull-right">
+								<button type = "button" class="btn btn-default acc-all"/>Accept All </button>
 							</div>
 						</div>						
 					</form>
